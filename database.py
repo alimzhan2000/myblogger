@@ -17,7 +17,7 @@ class Database:
 
 		#heroku----------------------
 		DATABASE_URL = os.environ['DATABASE_URL']
-		self.con = psycopg2.conenct(DATABASE_URL, sslmode='require')
+		self.con = psycopg2.connect(DATABASE_URL, sslmode='require')
 		#----------------------------
 
 		self.cur = self.con.cursor()
