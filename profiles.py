@@ -28,3 +28,64 @@ class Blogger:
 			self.post_price = profile[11]
 			self.story_price = profile[12]
 			self.chat_id = profile[13]
+class Order:
+	def __init__(self, order=None):
+		if order is None:
+			self.name = ""
+			self.login = ""
+			self.descr = ""
+			self.post_or_story = ""
+			self.coverage = 0
+			self.geo = []
+			self.age = []
+			self.gender = ""
+			self.subject = ""
+			self.budget = 0
+			self.comment = ""
+			self.chat_id = ""
+		else:
+			self.name = order[1]
+			self.login = order[2]
+			self.descr = order[3]
+			self.post_or_story = order[4]  
+			self.coverage = order[5]
+			self.geo = order[6]
+			self.age = order[7]
+			self.gender = order[8]
+			self.subject = order[9]
+			self.budget = order[10]
+			self.comment = order[11]
+			self.chat_id = order[12]
+cities = [
+	'Алматы',
+	'Нур-Султан',
+	'Шымкент',
+	'Актобе',
+	'Караганда',
+	'Тараз',
+	'Павлодар',
+	'Усть-Каменогорск',
+	'Семей',
+	'Атырау',
+	'Костанай',
+	'Кызылорда',
+	'Уральск',
+	'Петропавлск',
+	'Актау',
+	'Кокшетау',
+	'Талдыкорган'	
+]
+categories = [
+	'Лайфстайл',
+	'Юмор',
+	'Мода',
+	'Уход за внешностью',
+	'Инста мама',
+	'Инста папа',
+	'Еда',
+	'Путешествия',
+	'Танцы/песни',
+	'Инста парочка',
+	'Бизнес/успех',
+	'Видеомонтаж'
+]
