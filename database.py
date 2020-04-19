@@ -55,7 +55,7 @@ class Database:
 				chat_id TEXT
 			);''')
 		self.con.commit()
-	def delete_tables(self):
+	def drop_tables(self):
 		self.cur.execute('DROP TABLE bloggers')
 		self.con.commit()
 	def new_blogger(self, profile):
