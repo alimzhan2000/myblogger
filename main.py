@@ -446,7 +446,8 @@ def create_order(message):
 		users[chat_id].order.chat_id = str(chat_id)
 		db.new_order(users[chat_id].order)
 		bot.send_message(chat_id, order_info(users[chat_id].order))
-		time.sleep(1)
+		time.sleep(2)
+		users[chat_id].mode = 0
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('Поиск блогеров', 'Создать заказ')
 		keyboard.row('Мои заказы', 'Обратная связь')
