@@ -14,6 +14,9 @@ class Blogger:
 			self.post_price = 0
 			self.story_price = 0
 			self.chat_id = ""
+			self.proof_photo_id = []
+			self.profile_photo_id = ""
+			self.telegram_username = ""
 		else:
 			self.name = profile[1]
 			self.login = profile[2]
@@ -28,6 +31,9 @@ class Blogger:
 			self.post_price = profile[11]
 			self.story_price = profile[12]
 			self.chat_id = profile[13]
+			self.proof_photo_id = profile[14]
+			self.profile_photo_id = profile[15]
+			self.telegram_username = profile[16]
 class Order:
 	def __init__(self, order=None):
 		if order is None:
@@ -43,6 +49,7 @@ class Order:
 			self.budget = 0
 			self.comment = ""
 			self.chat_id = ""
+			self.telegram_username = ""
 		else:
 			self.name = order[1]
 			self.login = order[2]
@@ -56,6 +63,7 @@ class Order:
 			self.budget = order[10]
 			self.comment = order[11]
 			self.chat_id = order[12]
+			self.telegram_username = order[13]
 cities = [
 	'Алматы',
 	'Нур-Султан',
