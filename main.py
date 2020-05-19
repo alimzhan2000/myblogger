@@ -52,59 +52,59 @@ def default_vars(chat_id):
 	users[chat_id] = Settings()
 	users[chat_id].blogger = tmp
 def profile_info(profile):
-	text = profile.name + '\n' + profile.login + '\n' + str(profile.followers) + ' подписчиков\n'
-	text += 'Средний охват одной публикации - ' + str(profile.avg_post_coverage)
-	text += '\nСредний охват одной истории - ' + str(profile.avg_story_coverage)
-	text += '\nГеография подписчиков - '
+	text = profile.name + '\n' + profile.login + '\n' + str(profile.followers) + ' followers\n'
+	text += 'Average Post Coverage - ' + str(profile.avg_post_coverage)
+	text += '\nAverage Story Coverage - ' + str(profile.avg_story_coverage)
+	text += '\nFollower Geography - '
 	for city in profile.followers_geo:
 		if city == profile.followers_geo[-1]:
 			text += city
 		else:
 			text += city + ', '
-	text += '\nСредний возраст подписчиков - '
+	text += '\nAverage Follower Age - '
 	for age in profile.avg_age:
 		if age == profile.avg_age[-1]:
-			text += age + ' лет'
+			text += age + ' years old'
 		else:
-			text += age + ' лет, '
-	text += '\nПол подписчиков:\nМужчины - ' + str(profile.male_ratio) + '%\nЖенщины - ' + str(profile.female_ratio)
-	text += '%\nТематика аккаунта - '
+			text += age + ' years old, '
+	text += '\nFollower Gender:\nMale - ' + str(profile.male_ratio) + '%\nFemale - ' + str(profile.female_ratio)
+	text += '%\nAccount Subjects - '
 	for sub in profile.subjects:
 		if sub == profile.subjects[-1]:
 			text += sub
 		else:
 			text += sub + ', '
-	text += '\nЦена одной публикации - ' + str(profile.post_price) + ' тенге'
-	text += '\nЦена одной истории - ' + str(profile.story_price) + ' тенге'
+	text += '\nPost price - ' + str(profile.post_price) + ' CAD'
+	text += '\nStory Price - ' + str(profile.story_price) + ' CAD'
 	return text  
 def order_info(order):
-	text = 'Название бренда - ' + order.name + '\n'
-	text += 'Логин в Instagram - ' + order.login + '\n'
-	text += 'Рекламируемый продукт - ' + order.descr + '\n'
-	text += 'Вариант продвижения - '
-	if order.post_or_story == 'Оба варианта':
-		text += 'Публикации и Истории'
+	text = 'Brand name - ' + order.name + '\n'
+	text += 'Instagram account - ' + order.login + '\n'
+	text += 'Product Advertised - ' + order.descr + '\n'
+	text += 'Promotion option - '
+	if order.post_or_story == 'Both':
+		text += 'Post and Story'
 	else:
 		text += order.post_or_story
-	text += '\nНеобходимый охват - ' + str(order.coverage)
-	text += '\nЦелевая аудитория:'
-	text += '\n География - '
+	text += '\nNecessary Audience Reach - ' + str(order.coverage)
+	text += '\nThe target audience:'
+	text += '\n Follower Geography - '
 	for city in order.geo:
 		if city == order.geo[-1]:
 			text += city
 		else:
 			text += city + ', '
-	text += '\n Ср. возраст - '
+	text += '\n Average age - '
 	for age in order.age:
 		if age == order.age[-1]:
-			text += age + ' лет'
+			text += age + ' years old'
 		else:
-			text += age + ' лет, '
-	text += '\n Пол - ' + order.gender
-	text += '\nТематика продукта - ' + order.subject
-	text += '\nБюджет - ' + str(order.budget) + ' тенге'
+			text += age + ' years old, '
+	text += '\n Gender - ' + order.gender
+	text += '\nProduct subjects - ' + order.subject
+	text += '\nBudget - ' + str(order.budget) + ' CAD'
 	if order.comment is not None:
-		text += '\nДополнительные комментарии:\n' + order.comment
+		text += '\nAdditional Comments:\n' + order.comment
 	return text
 def main_menu(chat_id):
 	global users
@@ -114,48 +114,48 @@ def main_menu(chat_id):
 	order = db.check_order(chat_id)
 	if users[chat_id].blogger is not None:
 		if users[chat_id].blogger is False:
-			keyboard.row('Поиск блогеров', 'Создать заказ')
-			keyboard.row('Мои заказы', 'Обратная связь')
+			keyboard.row('Find my blogger', 'Create an order')
+			keyboard.row('My orders', 'Feedback')
 		elif blogger is True:
-			keyboard.row('Мой профиль', 'Найти заказ')
-			keyboard.row('Создать профиль', 'Обратная связь')
+			keyboard.row('My profile', 'Find an order')
+			keyboard.row('Create a profile', 'Feedback')
 		else:
-			keyboard.row('Я Блогер', 'Я Рекламодатель')
-			bot.send_message(chat_id, 'Кем Вы являетесь?', reply_markup=keyboard)
+			keyboard.row('I am a blogger', 'I am an advertiser')
+			bot.send_message(chat_id, 'Who are you?', reply_markup=keyboard)
 			return
-		bot.send_message(chat_id, 'Главное меню.', reply_markup = keyboard)
+		bot.send_message(chat_id, 'Main menu', reply_markup = keyboard)
 		return
 	if blogger is False and order is False:
 		users[chat_id].blogger = None
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.row('Я Блогер', 'Я Рекламодатель')
-		bot.send_message(chat_id, 'Кем Вы являетесь?', reply_markup=keyboard)
+		keyboard.row('I am a blogger', 'I am an advertiser')
+		bot.send_message(chat_id, 'Who are you?', reply_markup=keyboard)
 		return
 	users[chat_id].blogger = blogger
 	if blogger is True:
-		keyboard.row('Мой профиль', 'Найти заказ')
-		keyboard.row('Создать профиль', 'Обратная связь')
+		keyboard.row('My profile', 'Find an order')
+		keyboard.row('Create a profile', 'Feedback')
 	else:
-		keyboard.row('Поиск блогеров', 'Создать заказ')
-		keyboard.row('Мои заказы', 'Обратная связь')
-	bot.send_message(chat_id, 'Главное меню.', reply_markup = keyboard)	
+		keyboard.row('Find my blogger', 'Create an order')
+		keyboard.row('My orders', 'Feedback')
+	bot.send_message(chat_id, 'Main menu', reply_markup = keyboard)	
 def refresh_search(message):
 	global users
 	chat_id = message.chat.id
 	if len(users[chat_id].search_list) == 0:
-		text = 'К сожалению, у нас нет блогеров по данному запросу'
-		text += '\n\nФильтры: '
+		text = 'Unfortunately, we did not find a blogger with your specified parameters'
+		text += '\n\nFilters: '
 		for i in range(4):
 			n = len(users[chat_id].filters[i])
 			if n > 0:
 				if i == 0:
-					text += '\nпо интересам - '
+					text += '\nby interests - '
 				if i == 1:
-					text += '\nпо региону - '
+					text += '\nby region - '
 				if i == 2:
-					text += '\nпо возрасту - '
+					text += '\nby age - '
 				if i == 3:
-					text += '\nпо полу - '
+					text += '\nby gender - '
 			for j in range(n):
 				text += users[chat_id].filters[i][j]
 				if j != n - 1:
@@ -169,18 +169,18 @@ def refresh_search(message):
 	profile = db.get_profile_by_id(blogger_id)
 	profile = Blogger(profile)
 	text = profile_info(profile)
-	text += '\n\nФильтры:'
+	text += '\n\nFilters:'
 	for i in range(4):
 		n = len(users[chat_id].filters[i])
 		if n > 0:
 			if i == 0:
-				text += '\nпо интересам - '
+				text += '\nby interests - '
 			if i == 1:
-				text += '\nпо региону - '
+				text += '\nby region - '
 			if i == 2:
-				text += '\nпо возрасту - '
+				text += '\nby age - '
 			if i == 3:
-				text += '\nпо полу - '
+				text += '\nby gender - '
 		for j in range(n):
 			text += users[chat_id].filters[i][j]
 			if j != n - 1:
@@ -207,17 +207,17 @@ def refresh_order(message):
 	order_id = users[chat_id].orders_list[users[chat_id].cur_order][0]
 	order = db.get_order_by_id(order_id)
 	info = order_info(Order(order))
-	info += '\n\n*Выбери то, что ты хочешь изменить*'
+	info += '\n\n*Choose what you would like to change*'
 	keyboard = types.InlineKeyboardMarkup()
-	button1 = types.InlineKeyboardButton('Название', callback_data = 'edit_order_name')
-	button2 = types.InlineKeyboardButton('Логин', callback_data = 'edit_order_login')
-	button3 = types.InlineKeyboardButton('Описание', callback_data = 'edit_descr')
-	button4 = types.InlineKeyboardButton('Продвижение', callback_data = 'edit_post_or_story')
-	button5 = types.InlineKeyboardButton('Охват', callback_data = 'edit_order_coverage')
-	button6 = types.InlineKeyboardButton('Бюджет', callback_data = 'edit_budget')
-	button7 = types.InlineKeyboardButton('Доп.комментарий', callback_data = 'edit_comments')
-	button8 = types.InlineKeyboardButton('Целевая аудитория', callback_data = 'edit_target')
-	button9 = types.InlineKeyboardButton('Назад', callback_data = 'back_to_order')
+	button1 = types.InlineKeyboardButton('Order name', callback_data = 'edit_order_name')
+	button2 = types.InlineKeyboardButton('Login', callback_data = 'edit_order_login')
+	button3 = types.InlineKeyboardButton('Description', callback_data = 'edit_descr')
+	button4 = types.InlineKeyboardButton('Promotion', callback_data = 'edit_post_or_story')
+	button5 = types.InlineKeyboardButton('Coverage', callback_data = 'edit_order_coverage')
+	button6 = types.InlineKeyboardButton('Budget', callback_data = 'edit_budget')
+	button7 = types.InlineKeyboardButton('Additional comment', callback_data = 'edit_comments')
+	button8 = types.InlineKeyboardButton('Target audience', callback_data = 'edit_target')
+	button9 = types.InlineKeyboardButton('Go back', callback_data = 'back_to_order')
 	keyboard.row(button1, button2, button3)
 	keyboard.row(button4, button5, button6)
 	keyboard.row(button7, button8)
@@ -233,9 +233,9 @@ def start(message):
 	add_new_user(chat_id)
 	default_vars(chat_id)
 	keyboard = types.ReplyKeyboardMarkup(True, False)
-	keyboard.row('Я Блогер', 'Я Рекламодатель')
-	bot.send_message(message.chat.id, 'Привет! Я бот, который соединяет блогеров с их заказчиками и делает это самым\
-	эффективным способом. Для начала нашей работы, скажи, ты блогер или рекламодатель?', reply_markup=keyboard)
+	keyboard.row('I am a blogger', 'I am an advertiser')
+	bot.send_message(message.chat.id, 'Hi! I am the bot, which connects advertisers with their perfect match bloggers. To begin our work, tell me who you are: a blogger or an advertiser?', reply_markup=keyboard)
+	bot.send_sticker(chat_id, 'CAACAgIAAxkBAALZIF7D6Ujs9ALtrGIL53htddX9pN1IAAKSCAACCLcZAt2558s4lgJ9GQQ')
 
 @bot.message_handler(func=lambda message:message.text is not None and message.text[:4] == 'mode')
 def mode_set(message):
@@ -250,8 +250,8 @@ def upload_photo(message):
 		if users[chat_id].mode == 5:
 			users[chat_id].profile.proof_photo_id.append(photos.document_handler(message, bot))
 			users[chat_id].mode += 1
-			bot.send_message(chat_id, 'Спасибо! Теперь мне нужно узнать охват одного stories\
-			\n(P.S Зайди в раздел “статистика”, выбери “истории”, и далее “охват” за последние 14 дней)')
+			bot.send_message(chat_id, 'Thank you! Now I need to know the coverage of your stories\
+			\n(P.S Go to "statistics", choose "stories", then "coverage" for the last 14 days)')
 		elif users[chat_id].mode == 7:
 			users[chat_id].profile.proof_photo_id.append(photos.document_handler(message, bot))
 			users[chat_id].mode += 1
@@ -261,19 +261,19 @@ def upload_photo(message):
 				keyboard.row(cities[i-1], cities[i])
 			if n % 2 != 0:
 				keyboard.row(cities[n-1])
-			bot.send_message(chat_id, 'Теперь давай узнаем с каких регионов у тебя подписчики.', reply_markup = keyboard)
+			bot.send_message(chat_id, "Okay! Now let's find out what regions your followers from", reply_markup = keyboard)
 		elif users[chat_id].mode == 9:
 			users[chat_id].profile.proof_photo_id.append(photos.document_handler(message, bot))
 			users[chat_id].mode += 1
 			keyboard = types.ReplyKeyboardMarkup(True, False)
 			keyboard.row('13-17', '18-24', '25-34')
 			keyboard.row('35-44', '45-54')
-			bot.send_message(chat_id, 'Спасибо :з Теперь нужно понять, какой средний возраст твоих подписчиков.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'Got it! What is your average follower age', reply_markup = keyboard)
 		elif users[chat_id].mode == 11:
 			users[chat_id].profile.proof_photo_id.append(photos.document_handler(message, bot))
 			users[chat_id].mode += 1
-			bot.send_message(chat_id, 'Теперь нужно разделение твоих подписчиков по половому признаку в процентном соотношении.\
-			Сколько процентов твоей аудитории женская?')
+			bot.send_message(chat_id, 'Cool! Now I need to divide your followers by gender as a percentage\
+			How many percent of your followers is female')
 		elif users[chat_id].mode == 14:
 			users[chat_id].profile.proof_photo_id.append(photos.document_handler(message, bot))
 			users[chat_id].mode += 1
@@ -283,53 +283,52 @@ def upload_photo(message):
 				keyboard.row(categories[i-1], categories[i])
 			if n % 2 != 0:
 				keyboard.row(categories[n-1])
-			bot.send_message(chat_id, 'Осталось еще 3 шага для создания твоего профиля!\
-			Выбери тематику своего аккаунта\n(P.S. Можешь выбрать несколько)', reply_markup = keyboard)
+			bot.send_message(chat_id, 'Great! Only 3 steps are left to create your profile!\
+			Choose the subject (interests) of your account\n(P.S. You may choose several)', reply_markup = keyboard)
 		elif users[chat_id].mode == 18:
 			users[chat_id].profile.profile_photo_id = photos.document_handler(message, bot)
 			users[chat_id].profile.telegram_username = '@' + str(message.from_user.username)
 			users[chat_id].mode = 0
 			db.new_blogger(users[chat_id].profile)
 			keyboard = types.ReplyKeyboardMarkup(True, False)
-			keyboard.row('Мой профиль', 'Найти заказ')
-			keyboard.row('Создать профиль', 'Обратная связь')
-			bot.send_message(chat_id, 'Прекрасно! Мы с тобой это сделали! Уже предвкушаю как тебе будут писать рекламодатели\
-			и размещать свою рекламу :)) Надеюсь, мы теперь с тобой друзья. Если я тебе понравился, познакомь меня пожалуйста\
-			еще со своими друзьями-блогерами. Я люблю общаться с творческими людьми!', reply_markup = keyboard)
+			keyboard.row('My profile', 'Find an order')
+			keyboard.row('Create a profile', 'Feedback')
+			bot.send_message(chat_id, 'Hooray! We did it! I’m already looking forward to how advertisers will write to you and place their ads :)) I hope you and I are friends now. If you liked me, please introduce me to your friends-bloggers. I love communicating with creative people!', reply_markup = keyboard)
+			bot.send_sticker(chat_id, 'CAACAgIAAxkBAALZHl7D6QtW1Pb9p4mky7Sc9Nxda-NwAAKyCAACCLcZAhMvzLXnfVShGQQ')
 	if users[chat_id].profile_edit_mode > 0:
 		mode = users[chat_id].profile_edit_mode
 		if mode == 3:
 			photo_id = photos.document_handler(message, bot)
 			db.profile_edit_proof(chat_id, photo_id, 0)
 			refresh_profile(message)
-			bot.send_message(chat_id, 'Ты успешно изменил средний охват публикации')
+			bot.send_message(chat_id, 'You successfully changed average post coverage')
 			users[chat_id].profile_edit_mode = 0
 		elif mode == 4:
 			photo_id = photos.document_handler(message, bot)
 			db.profile_edit_proof(chat_id, photo_id, 1)
 			refresh_profile(message)
-			bot.send_message(chat_id, 'Ты успешно изменил средний охват истории')
+			bot.send_message(chat_id, 'You successfully changed average stories coverage')
 			users[chat_id].profile_edit_mode = 0
 		elif mode == 8:
 			photo_id = photos.document_handler(message, bot)
 			db.profile_edit_proof(chat_id, photo_id, 2)
 			refresh_profile(message)
-			bot.send_message(chat_id, 'Ты успешно изменил географию подписчиков')
+			bot.send_message(chat_id, 'You successfully changed follower geography')
 			users[chat_id].profile_edit_mode = 0
 		elif mode == 9:
 			photo_id = photos.document_handler(message, bot)
 			db.profile_edit_proof(chat_id, photo_id, 3)
 			refresh_profile(message)
-			bot.send_message(chat_id, 'Ты успешно изменил средний возраст подписчиков')
+			bot.send_message(chat_id, 'You successfully changed follower average age')
 			users[chat_id].profile_edit_mode = 0
 		elif mode == 10:
 			photo_id = photos.document_handler(message, bot)
 			db.profile_edit_proof(chat_id, photo_id, 4)
 			refresh_profile(message)
-			bot.send_message(chat_id, 'Ты успешно изменил распределение по половому признаку')
+			bot.send_message(chat_id, 'You successfully changed gender distribution')
 			users[chat_id].profile_edit_mode = 0
 
-@bot.message_handler(func=lambda message:message.text == 'Назад в меню')
+@bot.message_handler(func=lambda message:message.text == 'Back to menu')
 def main_menu_handler(message):
 	main_menu(message.chat.id)
 
@@ -342,41 +341,41 @@ def create_profile(message):
 		users[chat_id].profile.chat_id = chat_id
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('Назад в меню')
-		bot.send_message(chat_id, 'Введи название своего аккаунта в Instagram.\n(пример: @bloggerskz)', reply_markup=keyboard)
+		bot.send_message(chat_id, 'Can you please type the name of your Instagram account?\n(example: @bloggerscanada)', reply_markup=keyboard)
 		users[chat_id].mode += 1
 	elif users[chat_id].mode == 2:
 		users[chat_id].profile.login = message.text
-		bot.send_message(chat_id, 'Сколько у тебя подписчиков?\n(пример: 23500)')
+		bot.send_message(chat_id, 'Got it! How many followers do you have?\n(example: 23500)')
 		users[chat_id].mode += 1
 	elif users[chat_id].mode == 3:
 		if message.text.isdigit() == False:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без букв и других символов')
+			bot.send_message(chat_id, 'Please, type only numbers without symbols or letters')
 			return
 		users[chat_id].profile.followers = int(message.text)
 		users[chat_id].mode += 1
-		bot.send_message(chat_id, 'Вау, это впечатляет. А какой у тебя охват одного поста?\
-		\n(P.S. Можешь зайти у себя в инсте в раздел “статистика”, выбери “публикации”, и “охват” за последние 30 дней)')		
+		bot.send_message(chat_id, 'Wow, that is impressive! What is your post coverage?\
+		\n(P.S. Go to "statistics", choose "publications", then "coverage" for the last 30 days')		
 	elif users[chat_id].mode == 4:
 		if message.text.isdigit() == False:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без букв и других символов')
+			bot.send_message(chat_id, 'Please, type only numbers without symbols or letters')
 			return
 		users[chat_id].profile.avg_post_coverage = int(message.text)
 		users[chat_id].mode += 1
-		bot.send_message(chat_id, 'Так, теперь чтобы я тебе полностью поверил, пришли пожалуйста скриншот этой страницы с охватом.')
+		bot.send_message(chat_id, 'Okay, now in order me to believe this number, I need to double-check. Can you please upload a screenshot of the page with post coverage?')
 	elif users[chat_id].mode == 6:
 		if message.text.isdigit() == False:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без букв и других символов')
+			bot.send_message(chat_id, 'Please, type only numbers without symbols or letters')
 			return
 		users[chat_id].profile.avg_story_coverage = int(message.text)
 		users[chat_id].mode += 1
-		bot.send_message(chat_id, 'И еще один скриншот-подтверждение пожалуйста. Пойми, нас просто начальство проверяет🙁')
+		bot.send_message(chat_id, 'One more screenshot to prove please. I am very sorry, but our boss is very strict🙁')
 	elif users[chat_id].mode == 8:
-		if message.text == 'Следующий шаг':
+		if message.text == 'Next step':
 			users[chat_id].mode += 1
 			keyboard = types.ReplyKeyboardMarkup(True, False)
-			keyboard.row('Назад в меню')
-			bot.send_message(chat_id, 'Я наверное уже надоел с этим, но нужно и для этого скриншот-подтверждение.\
-			Для этого, зайди в “статистика”, выбери “аудитория” и “топ-местоположений” по городам.', reply_markup = keyboard)
+			keyboard.row('Back to menu')
+			bot.send_message(chat_id, 'I am probably annoying with this, but I need one more screenshot of the page to prove\
+			Go to "statistics", choose "audience", then "region and cities"', reply_markup = keyboard)
 			return
 		users[chat_id].profile.followers_geo.append(message.text)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
@@ -385,47 +384,45 @@ def create_profile(message):
 			keyboard.row(cities[i-1], cities[i])
 		if n % 2 != 0:
 			keyboard.row(cities[n-1])
-		keyboard.row('Следующий шаг')
+		keyboard.row('Next step')
 		if len(users[chat_id].profile.followers_geo) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько городов или нажать "Следующий шаг", чтобы перейти к следующему этапу.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'You can choose several options. After choosing all of them, press "Next step" button to go further', reply_markup = keyboard)
 	elif users[chat_id].mode == 10:
-		if message.text == 'Следующий шаг':
+		if message.text == 'Next step':
 			users[chat_id].mode += 1
 			keyboard = types.ReplyKeyboardMarkup(True, False)
-			keyboard.row('Назад в меню')
-			bot.send_message(chat_id, 'Так, начальство требует и для этого подтверждение. Пришли скриншот и для этого\
-			пожалуйста (Зайди в раздел “статистика”, далее выбери “аудитория” и “возрастной диапазон” всех подписчиков).\
-			Не переживай, нам осталось совсем немного', reply_markup=keyboard)
+			keyboard.row('Back to menu')
+			bot.send_message(chat_id, 'Okay, our boss requires even this to be proven. Can you please send me a screenshot-provement. There are few steps left!\
+			(P.S. Go to "statistics", choose "audience", then "age distribution" of all followers)', reply_markup=keyboard)
 			return
 		users[chat_id].profile.avg_age.append(message.text)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('13-17', '18-24', '25-34')
 		keyboard.row('35-44', '45-54')
-		keyboard.row('Следующий шаг')
+		keyboard.row('Next step')
 		if len(users[chat_id].profile.avg_age) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько диапозонов или нажать "Следующий шаг", чтобы перейти к следующему этапу.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'You can choose several options. After choosing all of them, press "Next step" button to go further', reply_markup = keyboard)
 	elif users[chat_id].mode == 12:
 		if message.text.isdigit() == False:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без букв и других символов')
+			bot.send_message(chat_id, 'Please, type only numbers without symbols or letters')
 			return
 		users[chat_id].profile.female_ratio = int(message.text)
 		users[chat_id].mode += 1
-		bot.send_message(chat_id, 'А сколько процентов аудитории мужская?')
+		bot.send_message(chat_id, 'How many percent of your followers is male?')
 	elif users[chat_id].mode == 13:
 		if message.text.isdigit() == False:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без букв и других символов')
+			bot.send_message(chat_id, 'Please, type only numbers without symbols or letters')
 			return
 		users[chat_id].profile.male_ratio = int(message.text)
 		users[chat_id].mode += 1
-		bot.send_message(chat_id, 'И так, это последний скриншот, который я у тебя попрошу. Зайди в “статистика”,\
-		выбери “аудитория” и “пол”')
+		bot.send_message(chat_id, 'Okay, the last screenshot I am going to ask! Go to "statistics", choose "audience" and "gender"')
 	elif users[chat_id].mode == 15:
-		if message.text == 'Следующий шаг':
+		if message.text == 'Next step':
 			users[chat_id].mode += 1
 			keyboard = types.ReplyKeyboardMarkup(True, False)
-			keyboard.row('Назад в меню')
-			bot.send_message(chat_id, 'А теперь десерт. Мне нужно знать сколько ты хочешь зарабатывать на одном посте.\
-			Введи сумму в тенге.', reply_markup = keyboard)
+			keyboard.row('Back to menu')
+			bot.send_message(chat_id, 'The main thing! How much do you want to earn on a post ad?\
+			Type only numbers (in CAD)', reply_markup = keyboard)
 			return
 		users[chat_id].profile.subjects.append(message.text)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
@@ -434,26 +431,24 @@ def create_profile(message):
 			keyboard.row(categories[i-1], categories[i])
 		if n % 2 != 0:
 			keyboard.row(categories[n-1])
-		keyboard.row('Следующий шаг')
+		keyboard.row('Next step')
 		if len(users[chat_id].profile.subjects) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько тематик или нажать "Следующий шаг",\
-			чтобы перейти к следующему этапу.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'You can choose several options. After choosing all of them, press "Next step" button"', reply_markup = keyboard)
 	elif users[chat_id].mode == 16:
 		if message.text.isdigit() == False:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без букв и других символов')
+			bot.send_message(chat_id, 'Please, type only numbers without symbols or letters')
 			return
 		users[chat_id].profile.post_price = int(message.text)
 		users[chat_id].mode += 1
-		bot.send_message(chat_id, 'Неплохо, но если вдруг тебе не будут писать довольно долгое время, ты всегда можешь\
-		изменить цену и весь свой профиль у себя в кабинете. Для этого нужно будет зайти в “Мой профиль”')
-		bot.send_message(chat_id, 'И так, последний вопрос! Сколько ты хочешь зарабатывать на одном stories?')
+		bot.send_message(chat_id, 'Not bad. But If there will be very few orders for a long time, you can change that price at any time. Go to /menu and choose "My profile"')
+		bot.send_message(chat_id, 'How much do you want to earn on a stories ad?')
 	elif users[chat_id].mode == 17:
 		if message.text.isdigit() == False:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без букв и других символов')
+			bot.send_message(chat_id, 'Please, type only numbers without symbols or letters')
 			return
 		users[chat_id].profile.story_price = int(message.text)
 		users[chat_id].mode += 1
-		bot.send_message(chat_id, 'Теперь тебе осталось только отправить мне фотографию своего профиля.')
+		bot.send_message(chat_id, 'The last step! Can you please upload your Instagram profile photo?')
 
 @bot.message_handler(func=lambda message:message.chat.id in users.keys() and users[message.chat.id].mode > 0 and users[message.chat.id].blogger == False)
 def create_order(message):
@@ -462,31 +457,30 @@ def create_order(message):
 	if users[chat_id].mode == 1:
 		users[chat_id].order.name = message.text
 		users[chat_id].mode += 1
-		bot.send_message(chat_id, 'Теперь укажи аккаунт бренда в инстаграме.\n(пример: @mybloggerkz)')
+		bot.send_message(chat_id, 'Great! Now I need to know your brand name in Instagram\n(example: @mybloggercanada)')
 	elif users[chat_id].mode == 2:
 		users[chat_id].order.login = message.text
 		users[chat_id].mode += 1
-		bot.send_message(chat_id, 'Прекрасно! Что мы собираемся продвигать?(пример: косметика из натуральных компонентов)')		 
+		bot.send_message(chat_id, 'Got it! What we are going to promote?\n(example: natural cosmetics)')		 
 	elif users[chat_id].mode == 3:
 		users[chat_id].order.descr = message.text
 		users[chat_id].mode += 1
 		keyboard = types.ReplyKeyboardMarkup(True, True)
-		keyboard.row('Публикация', 'История')
-		keyboard.row('Оба варианта')
-		bot.send_message(chat_id, 'Теперь укажи какой вариант продвижения тебя интересует', reply_markup=keyboard)
+		keyboard.row('Post', 'Stories')
+		keyboard.row('Both')
+		bot.send_message(chat_id, 'What a product! If I were alive, I would definetely buy it! Now, choose your promotion you are interested in', reply_markup=keyboard)
 	elif users[chat_id].mode == 4:
-		if message.text != 'Публикация' and message.text != 'История' and message.text != 'Оба варианта':
-			bot.send_message(chat_id, 'Неправильный ввод! Прошу тебя воспользоваться клавиатурой\
-			или отправить сообщением один из вариантов.\n1.Публикация\n2.История\n3.Оба варианта')
+		if message.text != 'Post' and message.text != 'Stories' and message.text != 'Both':
+			bot.send_message(chat_id, 'Sorry, I understand only text that you choose from the buttons below:\n1.Post\n2.Stories\n3.Both')
 			return
 		users[chat_id].order.post_or_story = message.text
 		users[chat_id].mode += 1
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.add('Назад в меню')
-		bot.send_message(chat_id, 'Какой необходимый охват для продвижения?\n(пример: 25000)', reply_markup = keyboard)
+		keyboard.add('Back to menu')
+		bot.send_message(chat_id, 'What is your promotion coverage?\n(example: 25000)', reply_markup = keyboard)
 	elif users[chat_id].mode == 5:
 		if message.text.isdigit() is False:
-			bot.send_message(chat_id, 'Прошу тебя ввести целое число без других символов.')
+			bot.send_message(chat_id, 'Please, type only numbers without symbols and letters')
 			return
 		users[chat_id].order.coverage = int(message.text)
 		users[chat_id].mode += 1
@@ -496,14 +490,14 @@ def create_order(message):
 			keyboard.row(cities[i-1], cities[i])
 		if n % 2 != 0:
 			keyboard.row(cities[n-1])
-		bot.send_message(chat_id, 'Какая география у твоей целевой аудитории?', reply_markup = keyboard)
+		bot.send_message(chat_id, 'Big plans! What is your audience geography?', reply_markup = keyboard)
 	elif users[chat_id].mode == 6:
-		if message.text == 'Следующий шаг':
+		if message.text == 'Next step':
 			users[chat_id].mode += 1
 			keyboard = types.ReplyKeyboardMarkup(True, False)
 			keyboard.row('13-17', '18-24', '25-34')
 			keyboard.row('35-44', '45-54')
-			bot.send_message(chat_id, 'Какой средний возраст у твоей целевой аудитории.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'Okay, what is your audience average age?', reply_markup = keyboard)
 			return
 		users[chat_id].order.geo.append(message.text)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
@@ -512,28 +506,27 @@ def create_order(message):
 			keyboard.row(cities[i-1], cities[i])
 		if n % 2 != 0:
 			keyboard.row(cities[n-1])
-		keyboard.row('Следующий шаг')
+		keyboard.row('Next step')
 		if len(users[chat_id].order.geo) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько городов или нажать "Следующий шаг", чтобы перейти к следующему этапу.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'You can choose several options. When you finish, press "Next step" in order to go further', reply_markup = keyboard)
 	elif users[chat_id].mode == 7:
-		if message.text == 'Следующий шаг':
+		if message.text == 'Next step':
 			users[chat_id].mode += 1
 			keyboard = types.ReplyKeyboardMarkup(True, True)
-			keyboard.row('Мужчины', 'Женщины')
-			keyboard.row('Все')
-			bot.send_message(chat_id, 'Так, теперь нужно указать какой пол у твоей аудитории.', reply_markup=keyboard)
+			keyboard.row('Male', 'Female')
+			keyboard.row('Both')
+			bot.send_message(chat_id, 'Now I need to know your audience gender', reply_markup=keyboard)
 			return
 		users[chat_id].order.age.append(message.text)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('13-17', '18-24', '25-34')
 		keyboard.row('35-44', '45-54')
-		keyboard.row('Следующий шаг')
+		keyboard.row('Next')
 		if len(users[chat_id].order.age) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько диапозонов или нажать "Следующий шаг", чтобы перейти к следующему этапу.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'You may choose several options. When you finish, press "Next step" in order to go further', reply_markup = keyboard)
 	elif users[chat_id].mode == 8:
-		if message.text != 'Мужчины' and message.text != 'Женщины' and message.text != 'Все':
-			bot.send_message(chat_id, 'Неправильный ввод! Прошу тебя воспользоваться клавиатурой\
-			или отправить сообщением один из вариантов.\n1.Мужчины\n2.Женщины\n3.Все')
+		if message.text != 'Male' and message.text != 'Female' and message.text != 'Both':
+			bot.send_message(chat_id, 'Please, use the buttons below:\n1.Male\n2.Female\n3.Both')
 			return
 		users[chat_id].order.gender = message.text
 		users[chat_id].mode += 1
@@ -543,26 +536,25 @@ def create_order(message):
 			keyboard.row(categories[i-1], categories[i])
 		if n % 2 != 0:
 			keyboard.row(categories[n-1])
-		bot.send_message(chat_id, 'Осталось всего два шага до поиска самых эффективных тебе блогеров!')
-		bot.send_message(chat_id, 'Укажи интересы своих клиентов рекламируемого бренда или продукта.', reply_markup = keyboard)
+		bot.send_message(chat_id, 'There are only 2 steps to find you the perfect match blogger!')
+		bot.send_message(chat_id, 'Please, choose the interests of your target audience', reply_markup = keyboard)
 	elif users[chat_id].mode == 9:
 		users[chat_id].order.subject = message.text
 		users[chat_id].mode += 1
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.add('Назад в меню')
-		bot.send_message(chat_id, 'И последний шаг. Какой бюджет у твоей рекламной кампании?\n(пример: 65000)', reply_markup = keyboard)
+		keyboard.add('Back to menu')
+		bot.send_message(chat_id, 'The last step! What is your promotion budget?\n(example: 65000)', reply_markup = keyboard)
 	elif users[chat_id].mode == 10:
 		if message.text.isdigit() is False:
-			bot.send_message(chat_id, 'Неправильный ввод! Прошу тебя ввести целое число без других символов.')
+			bot.send_message(chat_id, 'Please, provide only numbers without symbols and letters')
 			return
 		users[chat_id].order.budget = int(message.text)
 		users[chat_id].mode += 1
 		keyboard = types.ReplyKeyboardMarkup(True, True)
-		keyboard.row('Пропустить')
-		bot.send_message(chat_id, 'Оставьте дополнительные комментарии (Здесь может быть ваше видение того, как блогеру\
-		нужно преподнести ваш продукт - минимальное техническое задание)', reply_markup = keyboard)
+		keyboard.row('Skip')
+		bot.send_message(chat_id, 'Okay, we are finished! Any additional comments? (Here you can describe the methods or work plan for the blogger to have better understanding)', reply_markup = keyboard)
 	elif users[chat_id].mode == 11:
-		if message.text == 'Пропустить':
+		if message.text == 'Skip':
 			users[chat_id].order.comment = None
 		else:
 			users[chat_id].order.comment = message.text
@@ -574,12 +566,10 @@ def create_order(message):
 		time.sleep(2)
 		users[chat_id].mode = 0
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.row('Поиск блогеров', 'Создать заказ')
-		keyboard.row('Мои заказы', 'Обратная связь')
-		bot.send_message(chat_id, 'Ура! Мы сформировали тебе заказ, для того чтобы просмотреть подходящих блогеров или\
-			что-то изменить, зайди в “Мои заказы” в своем кабинете. Если тебе понравилось наше знакомство, я буду очень рад,\
-			если ты расскажешь про меня своим коллегам или друзьям. Чем больше друзей, тем лучше. Люблю общаться с деловыми\
-			людьми!', reply_markup = keyboard)
+		keyboard.row('Find my blogger', 'Create an order')
+		keyboard.row('My orders', 'Feedback')
+		bot.send_message(chat_id, 'Hooray! We successfuly created your profile. If you want to edit some info further, you can easily go to the /menu and choose "My orders". I hope you and I are friends now. If so, can you please introduce me to your friends. I adore communicating with people from business!', reply_markup = keyboard)
+		bot.send_sticker(chat_id, 'CAACAgIAAxkBAALZHl7D6QtW1Pb9p4mky7Sc9Nxda-NwAAKyCAACCLcZAhMvzLXnfVShGQQ')
 
 @bot.message_handler(func=lambda message:message.chat.id in users.keys() and users[message.chat.id].profile_edit_mode > 0)
 def edit_profile(message):
@@ -589,36 +579,34 @@ def edit_profile(message):
 	if mode == 1:
 		db.profile_edit_name(chat_id, message.text)
 		refresh_profile(message)
-		bot.send_message(chat_id, 'Ты успешно изменил свое имя')
+		bot.send_message(chat_id, 'You successfully changed your name')
 		users[chat_id].profile_edit_mode = 0
 	elif mode == 2:
 		db.profile_edit_login(chat_id, message.text)
 		refresh_profile(message)
-		bot.send_message(chat_id, 'Ты успешно изменил свой логин')
+		bot.send_message(chat_id, 'You successfully changed your login')
 		users[chat_id].profile_edit_mode = 0
 	elif mode == 3:
 		if message.text.isdigit() is not True:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без других символов')
+			bot.send_message(chat_id, 'Please, provide only numbers without symbols and letters')
 			return
 		db.profile_edit_post_cvg(chat_id, int(message.text))
-		bot.send_message(chat_id, 'Теперь пришли нам скриншот-подтверждение\n(P.S. Зайди у себя в инсте в раздел\
-		“статистика”, выбери “публикации”, и “охват” за последние 30 дней)')
+		bot.send_message(chat_id, 'Can you please provide screenshot to prove this. I will be very thankful😘\n(P.S. Go to "statistics", choose "posts", then "coverage" for the last 30 days')
 	elif mode == 4:
 		if message.text.isdigit() is not True:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без других символов')
+			bot.send_message(chat_id, 'Please, provide only numbers without symbols and letters')
 			return
 		db.profile_edit_story_cvg(chat_id, int(message.text))
-		bot.send_message(chat_id, 'Теперь пришли нам скриншот-подтверждение\n(P.S. Зайди у себя в инсте в раздел\
-		“статистика”, выбери “истории”, и далее “охват” за последние 14 дней)')
+		bot.send_message(chat_id, 'We also need provement for this one. Can you please send me a screenshot of your coverage?\n(P.S. Go to "statistics", choose "stories", then "coverage" for 14 days)')
 	elif mode == 5:
-		if message.text == 'Изменить':
+		if message.text == 'Edit':
 			db.profile_edit_subjects(chat_id, users[chat_id].tmp)
 			users[chat_id].tmp = []
 			refresh_profile(message)
 			keyboard = types.ReplyKeyboardMarkup(True, False)
-			keyboard.row('Мой профиль', 'Найти заказ')
-			keyboard.row('Создать профиль', 'Обратная связь')
-			bot.send_message(chat_id, 'Изменения успешно применены', reply_markup = keyboard)
+			keyboard.row('My profile', 'Find an order')
+			keyboard.row('Create a profile', 'Feedback')
+			bot.send_message(chat_id, 'Success', reply_markup = keyboard)
 			users[chat_id].profile_edit_mode = 0
 			return
 		users[chat_id].tmp.append(message.text)
@@ -628,33 +616,31 @@ def edit_profile(message):
 			keyboard.row(categories[i-1], categories[i])
 		if n % 2 != 0:
 			keyboard.row(categories[n-1])
-		keyboard.row('Изменить')
+		keyboard.row('Edit')
 		if len(users[chat_id].tmp) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько тематик или нажать "Изменить",\
-			чтобы применить изменения.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'You may choose several options and when you are done, press "Edit"', reply_markup = keyboard)
 	elif mode == 6:
 		if message.text.isdigit() is not True:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без других символов')
+			bot.send_message(chat_id, 'Please, provide only numbers without letters and symbols')
 			return
 		db.profile_edit_post_price(chat_id, int(message.text))
 		users[chat_id].profile_edit_mode = 7
-		bot.send_message(chat_id, 'Хорошо, теперь напиши стоимость одной истории')
+		bot.send_message(chat_id, 'Okay, now I need to know your new price for one story')
 	elif mode == 7:
 		if message.text.isdigit() is not True:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без других символов')
+			bot.send_message(chat_id, 'Please, provide only numbers without letters and symbols')
 			return
 		db.profile_edit_story_price(chat_id, int(message.text))
 		refresh_profile(message)
 		users[chat_id].profile_edit_mode = 0
-		bot.send_message(chat_id, 'Цены за рекламную интеграцию успешно изменены ;)')
+		bot.send_message(chat_id, 'Success ;)')
 	elif mode == 8:
-		if message.text == 'Изменить':
+		if message.text == 'Edit':
 			db.profile_edit_geo(chat_id, users[chat_id].tmp)
 			keyboard = types.ReplyKeyboardMarkup(True, False)
-			keyboard.row('Мой профиль', 'Найти заказ')
-			keyboard.row('Создать профиль', 'Обратная связь')
-			bot.send_message(chat_id, 'Теперь пришли нам скриншот-подтверждение\n(P.S. Зайди в раздел\
-			“статистика”, выбери “аудитория” и “топ-местоположений” по городам)', reply_markup = keyboard)
+			keyboard.row('My profile', 'Find an order')
+			keyboard.row('Create a profile', 'Feedback')
+			bot.send_message(chat_id, 'Wonderful! Now I need one more provement for this one (P.S. all charges not to me, but to my boss😅)\n(P.S.S. Go to "statistics", choose "audience", then "locations" by regions and cities)', reply_markup = keyboard)
 			users[chat_id].tmp = []
 			return
 		users[chat_id].tmp.append(message.text)
@@ -664,46 +650,42 @@ def edit_profile(message):
 			keyboard.row(cities[i-1], cities[i])
 		if n % 2 != 0:
 			keyboard.row(cities[n-1])
-		keyboard.row('Изменить')
+		keyboard.row('Edit')
 		if len(users[chat_id].tmp) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько городов или нажать "Изменить",\
-			чтобы применить изменения.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'You may choose several options, when you are done, press "Edit" to finish', reply_markup = keyboard)
 	elif mode == 9:
-		if message.text == 'Изменить':
+		if message.text == 'Edit':
 			db.profile_edit_age(chat_id, users[chat_id].tmp)
 			keyboard = types.ReplyKeyboardMarkup(True, False)
-			keyboard.row('Мой профиль', 'Найти заказ')
-			keyboard.row('Создать профиль', 'Обратная связь')
-			bot.send_message(chat_id, 'Теперь пришли нам скриншот-подтверждение\n(P.S. Зайди в раздел\
-			“статистика”, далее выбери “аудитория” и “возрастной диапазон” всех подписчиков)', reply_markup = keyboard)
+			keyboard.row('My profile', 'Find an order')
+			keyboard.row('Create a profile', 'Feedback')
+			bot.send_message(chat_id, 'Heey! Can you please send my screenshot for this? (P.S. Go to "statistics", choose "audience", then "average follower age"', reply_markup = keyboard)
 			users[chat_id].tmp = []
 			return
 		users[chat_id].tmp.append(message.text)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('13-17', '18-24', '25-34')
 		keyboard.row('35-44', '45-54')
-		keyboard.row('Изменить')
+		keyboard.row('Edit')
 		if len(users[chat_id].tmp) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько диапозонов или нажать "Изменить",\
-			чтобы применить изменения.', reply_markup = keyboard)		
+			bot.send_message(chat_id, 'You may choose several options, when you are done, press "Edit" to finish', reply_markup = keyboard)		
 	elif mode == 10:
 		if message.text.isdigit() is not True:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без других символов')
+			bot.send_message(chat_id, 'Please provide only numbers without symbols and letters')
 			return
 		if int(message.text) < 0 or int(message.text) > 100:
-			bot.send_message(chat_id, 'Введи целое число от 0 до 100')
+			bot.send_message(chat_id, 'Type any number from 0 to 100')
 			return
 		db.profile_edit_gender(chat_id, int(message.text))
-		bot.send_message(chat_id, 'Теперь пришли нам скриншот-подтверждение\n(P.S. Зайди в раздел\
-			“статистика”, далее выбери “аудитория” и “пол”)')
+		bot.send_message(chat_id, 'Now I need to double check it (P.S. Go to "statistics", choose "audience", then "gender"')
 	elif mode == 11:
 		if message.text.isdigit() is not True:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без других символов')
+			bot.send_message(chat_id, 'Please provide only numbers without symbols and letters')
 			return
 		db.profile_edit_followers(chat_id, int(message.text))
 		users[chat_id].profile_edit_mode = 0
 		refresh_profile(message)
-		bot.send_message(chat_id, 'Количество твоих подписчиков успешно изменено')
+		bot.send_message(chat_id, 'The number of your followers has successfully changed!')
 
 @bot.message_handler(func=lambda message:message.chat.id in users.keys() and users[message.chat.id].order_edit_mode > 0)
 def edit_order(message):
@@ -717,50 +699,50 @@ def edit_order(message):
 		db.order_edit_name(order_id, message.text)
 		users[chat_id].order_edit_mode = 0
 		refresh_order(message)
-		bot.send_message(chat_id, 'Название бренда успешно изменено')
+		bot.send_message(chat_id, 'The name of your brand has successfully changed!')
 	elif mode == 2:
 		db.order_edit_login(order_id, message.text)
 		users[chat_id].order_edit_mode = 0
 		refresh_order(message)
-		bot.send_message(chat_id, 'Логин бренда успешно изменен')
+		bot.send_message(chat_id, 'The login of your brand has successfully changed!')
 	elif mode == 3:
 		db.order_edit_descr(order_id, message.text)
 		users[chat_id].order_edit_mode = 0
 		refresh_order(message)
-		bot.send_message(chat_id, 'Описание вашего продукта успешно изменено')
+		bot.send_message(chat_id, 'The description of your product has successfully changed!')
 	elif mode == 4:
 		db.order_edit_post_or_story(order_id, message.text)
 		users[chat_id].order_edit_mode = 0
 		refresh_order(message)
-		bot.send_message(chat_id, 'Вариант продвижения успешно изменен')
+		bot.send_message(chat_id, 'The promotion type has successfully changed')
 	elif mode == 5:
 		if message.text.isdigit() is not True:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без других символов')
+			bot.send_message(chat_id, 'Please, provide only numbers without symbols and letters')
 			return
 		db.order_edit_coverage(order_id, int(message.text))
 		users[chat_id].order_edit_mode = 0
 		refresh_order(message)
-		bot.send_message(chat_id, 'Необходимый охват для продвижения успешно изменен')
+		bot.send_message(chat_id, 'Your promotions coverage has successfully changed')
 	elif mode == 6:
 		if message.text.isdigit() is not True:
-			bot.send_message(chat_id, 'Пожалуйста, введи целое число без других символов')
+			bot.send_message(chat_id, 'Please, provide only numbers without symbols and letters')
 			return
 		db.order_edit_budget(order_id, int(message.text))
 		users[chat_id].order_edit_mode = 0
 		refresh_order(message)
-		bot.send_message(chat_id, 'Бюджет успешно изменен')
+		bot.send_message(chat_id, 'Your budget has successfuly changed')
 	elif mode == 7:
 		db.order_edit_comment(order_id, message.text)
 		users[chat_id].order_edit_mode = 0
 		refresh_order(message)
-		bot.send_message(chat_id, 'Дополнительные комментарии к заказу успешно изменены')
+		bot.send_message(chat_id, 'Your comments has successfuly changed')
 	elif mode == 8:
-		if message.text == 'Изменить':
+		if message.text == 'Edit':
 			db.order_edit_geo(order_id, users[chat_id].tmp)
 			keyboard = types.ReplyKeyboardMarkup(True, False)
-			keyboard.row('Поиск блогеров', 'Создать заказ')
-			keyboard.row('Мои заказы', 'Обратная связь')
-			bot.send_message(chat_id, 'География твоей целевой аудитории успешно изменена', reply_markup = keyboard)
+			keyboard.row('Find my blogger', 'Create an order')
+			keyboard.row('My orders', 'Feedback')
+			bot.send_message(chat_id, 'Your audience geography has successfully changed', reply_markup = keyboard)
 			users[chat_id].tmp = []
 			refresh_order(message)
 			users[chat_id].order_edit_mode = 0
@@ -772,17 +754,16 @@ def edit_order(message):
 			keyboard.row(cities[i-1], cities[i])
 		if n % 2 != 0:
 			keyboard.row(cities[n-1])
-		keyboard.row('Изменить')
+		keyboard.row('Edit')
 		if len(users[chat_id].tmp) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько городов или нажать "Изменить",\
-			чтобы применить изменения.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'You may choose several oprtions, when you are done press "Edit" to finish', reply_markup = keyboard)
 	elif mode == 9:
-		if message.text == 'Изменить':
+		if message.text == 'Edit':
 			db.order_edit_age(order_id, users[chat_id].tmp)
 			keyboard = types.ReplyKeyboardMarkup(True, False)
-			keyboard.row('Поиск блогеров', 'Создать заказ')
-			keyboard.row('Мои заказы', 'Обратная связь')
-			bot.send_message(chat_id, 'Средний возраст твоей целевой аудитории успешно изменен', reply_markup = keyboard)
+			keyboard.row('Find my blogger', 'Create an order')
+			keyboard.row('My orders', 'Feedback')
+			bot.send_message(chat_id, 'Your average audience age has successfully changed', reply_markup = keyboard)
 			users[chat_id].tmp = []
 			refresh_order(message)
 			users[chat_id].order_edit_mode = 0
@@ -791,93 +772,89 @@ def edit_order(message):
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('13-17', '18-24', '25-34')
 		keyboard.row('35-44', '45-54')
-		keyboard.row('Изменить')
+		keyboard.row('Edit')
 		if len(users[chat_id].tmp) <= 1: 
-			bot.send_message(chat_id, 'Ты можешь выбрать несколько диапозонов или нажать "Изменить",\
-			чтобы применить изменения.', reply_markup = keyboard)
+			bot.send_message(chat_id, 'You may choose several options, when you are done press "Edit" to finish', reply_markup = keyboard)
 	elif mode == 10:
 		db.order_edit_subject(order_id, message.text)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.row('Поиск блогеров', 'Создать заказ')
-		keyboard.row('Мои заказы', 'Обратная связь')
-		bot.send_message(chat_id, 'Интересы твоей целевой аудитории успешно изменены', reply_markup = keyboard)
+		keyboard.row('Find my blogger', 'Create an order')
+		keyboard.row('My orders', 'Feedback')
+		bot.send_message(chat_id, 'Your audience interests have successfully changed!', reply_markup = keyboard)
 		refresh_order(message)
 		users[chat_id].order_edit_mode = 0
 	elif mode == 11:
 		db.order_edit_gender(order_id, message.text)
 		refresh_order(message)
 		users[chat_id].order_edit_mode = 0
-		bot.send_message(chat_id, 'Пол целевой аудитории успешно изменен')
+		bot.send_message(chat_id, 'Your audience gender has successfully changed!')
 
 		
 @bot.message_handler(content_types = ['text'])
 def get_message(message):
 	global users
 	chat_id = message.chat.id
-	if message.text == 'Я Блогер':
+	if message.text == 'I am a blogger':
 		users[chat_id].blogger = True
 		if db.check_blogger(chat_id) is True:
 			main_menu(chat_id)
 			return
 		keyboard = types.ReplyKeyboardMarkup(True, True)
-		keyboard.row('Создать профиль')
-		bot.send_message(chat_id, 'Итак, будущая звезда, в этом разделе ты можешь создать свой профиль или посмотреть свой\
-		действующий. Также, ты можешь сам найти заказ. Для начала тебе необходимо создать свой профиль.', reply_markup = keyboard)
-	elif message.text == 'Создать профиль':
+		keyboard.row('Create a profile')
+		bot.send_message(chat_id, 'Heey! My future star, in this section you can create your profile or see your current one. Also, you can find the order yourself. But first, you need to create your profile.', reply_markup = keyboard)
+	elif message.text == 'Create a profile':
 		if db.check_blogger(chat_id) is True:
-			bot.send_message(chat_id, 'Вы не можете создать больше одного профиля. Для того, чтобы создать\
-			новый профиль необходимо удалить старый.')
+			bot.send_message(chat_id, 'You have already created profile! If you want to create a new one or make some editions, go to /menu and "My profile"')
 			return
 		users[chat_id].mode = 1
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.row('Назад в меню')
-		bot.send_message(chat_id, 'Отлично! Я совсем забыл представиться, меня зовут Ходор, а как тебя?', reply_markup = keyboard)
-	elif message.text == 'Найти заказ':
+		keyboard.row('Back to menu')
+		bot.send_message(chat_id, 'Great! Oh, I nearly forgot to introduce myself. My name is Hodor. What is yours?', reply_markup = keyboard)
+	elif message.text == 'Find an order':
 		blogger = Blogger(db.get_profile_by_chat_id(chat_id))
 		match_orders = users[chat_id].match_orders = db.get_match_orders(blogger)
 		cur_match_order = users[chat_id].cur_match_order = 0
 		keyboard = types.InlineKeyboardMarkup()
 		if len(match_orders) > 1:
-			keyboard.add(types.InlineKeyboardButton('Следующий заказ >>', callback_data = 'next_match_order'))
-		keyboard.add(types.InlineKeyboardButton('Пригласить к сотрудничеству', callback_data = 'invite_order'))
+			keyboard.add(types.InlineKeyboardButton('Next >>', callback_data = 'next_match_order'))
+		keyboard.add(types.InlineKeyboardButton('Invite to cooperation', callback_data = 'invite_order'))
 		order = Order(match_orders[cur_match_order])
 		info = order_info(order)
 		mess = bot.send_message(chat_id = chat_id, text = info, reply_markup = keyboard)
 		users[chat_id].match_orders_id = mess.message_id
-	elif message.text == 'Мой профиль':
+	elif message.text == 'My profile':
 		profile = Blogger(db.get_profile_by_chat_id(chat_id))
 		info = profile_info(profile)
 		photo = photos.download_photo(profile.profile_photo_id)
 		keyboard = types.InlineKeyboardMarkup()
-		button = types.InlineKeyboardButton('Редактировать профиль', callback_data = 'edit_profile')
+		button = types.InlineKeyboardButton('Edit profile', callback_data = 'edit_profile')
 		keyboard.add(button)
-		button = types.InlineKeyboardButton('Удалить профиль', callback_data = 'delete_profile')
+		button = types.InlineKeyboardButton('Delete', callback_data = 'delete_profile')
 		keyboard.add(button)
 		users[chat_id].last_keyboard = keyboard
 		mess = bot.send_photo(chat_id, photo, info, reply_markup = keyboard)
 		users[chat_id].profile_mess_id = mess.message_id
-	elif message.text == 'Я Рекламодатель':
+	elif message.text == 'I am an advertiser':
 		users[chat_id].blogger = False
 		if db.check_order(chat_id) is True:
 			main_menu(chat_id)
 			return
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.row('Поиск блогеров', 'Создать заказ')
-		keyboard.row('Мои заказы', 'Обратная связь')
-		bot.send_message(chat_id, 'Итак, для начала выбери что ты хочешь сделать. Ты можешь создать заказ, найти блогера и увидеть свои заказы.',\
- 		reply_markup=keyboard,parse_mode = 'Markdown')
-	elif message.text == 'Поиск блогеров':
+		keyboard.row('Find my blogger', 'Create an order')
+		keyboard.row('My orders', 'Feedback')
+		bot.send_message(chat_id, 'Heey! Welcome to our program. You may find your blogger by creating a profile, you may create an order and find all your current orders',reply_markup=keyboard,parse_mode = 'Markdown')
+	elif message.text == 'Find my blogger':
 		users[chat_id].search_st = True
 		users[chat_id].search_list = db.search_bloggers()
 		users[chat_id].cur_blogger = 0
 		keyboard = types.InlineKeyboardMarkup()
 		if len(users[chat_id].search_list) == 0:
-			bot.send_message(chat_id, 'К сожалению, в нашей базе нет блогеров по данному запросу')
+			bot.send_message(chat_id, 'Unfortunately, we do not have bloggers that may match your parameters :(')
 			return
 		if len(users[chat_id].search_list) > 1:
-			button = types.InlineKeyboardButton('Следующий блогер >>', callback_data = 'next_blogger')
+			button = types.InlineKeyboardButton('Next blogger >>', callback_data = 'next_blogger')
 			keyboard.add(button)
-		button = types.InlineKeyboardButton('Фильтровать по..', callback_data = 'filters')
+		button = types.InlineKeyboardButton('Filter by..', callback_data = 'filters')
 		keyboard.add(button)
 		# button = types.InlineKeyboardButton('Сортировать по..', callback_data = 'sort')
 		# keyboard.add(button)
@@ -886,55 +863,54 @@ def get_message(message):
 		profile = db.get_profile_by_id(blogger_id)
 		profile = Blogger(profile)
 		text = profile_info(profile)
-		text += '\n\nФильтры:\n\n' + str(cur_blogger+1) + '/' + str(len(users[chat_id].search_list))
+		text += '\n\nFilters:\n\n' + str(cur_blogger+1) + '/' + str(len(users[chat_id].search_list))
 		photo = photos.download_photo(profile.profile_photo_id)
 		mess = bot.send_photo(chat_id, photo, text, reply_markup = keyboard) 
 		users[chat_id].search_mess_id = mess.message_id
-	elif message.text == 'Создать заказ':
+	elif message.text == 'Create an order':
 		orders_list = db.get_orders_by_chat_id(chat_id)
 		if orders_list is not None:
 			keyboard = types.InlineKeyboardMarkup()
-			keyboard.row(types.InlineKeyboardButton('Да', callback_data = 'create_order_true'),\
-				types.InlineKeyboardButton('Нет', callback_data = 'create_order_false'))
-			bot.send_message(chat_id, 'У тебя уже есть следующее количество активных заказов: '\
-				+ '*' + str(len(orders_list)) + '*\nХочешь ли ты создать новый заказ?', reply_markup = keyboard,\
+			keyboard.row(types.InlineKeyboardButton('Yes', callback_data = 'create_order_true'),\
+				types.InlineKeyboardButton('No', callback_data = 'create_order_false'))
+			bot.send_message(chat_id, 'You have current orders: '\
+				+ '*' + str(len(orders_list)) + '*\nDo you wish to create a new one?', reply_markup = keyboard,\
 				parse_mode = 'Markdown')
 			return
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.add('Назад в меню')
+		keyboard.add('Back to menu')
 		users[chat_id].mode = 1
-		bot.send_message(chat_id, 'Отлично! Теперь мне нужно знать название твоего бренда.', reply_markup = keyboard)
-	elif message.text == 'Мои заказы':
+		bot.send_message(chat_id, 'Great! Now I need to know the name of your brand', reply_markup = keyboard)
+	elif message.text == 'My orders':
 		users[chat_id].orders_list = db.get_orders_by_chat_id(chat_id)
 		orders_list = users[chat_id].orders_list
 		cur_order = users[chat_id].cur_order = 0
 		if users[chat_id].orders_list is None:
-			bot.send_message(chat_id, 'У тебя пока еще нет активных заказов. Чтобы создать заказ\
-			нажмите на кнопку *"Создать заказ"*', parse_mode = 'Markdown')
+			bot.send_message(chat_id, 'You do not have any active orders. To create one, press *"Create an order"*', parse_mode = 'Markdown')
 			return
 		keyboard = types.InlineKeyboardMarkup()
 		if len(users[chat_id].orders_list) > 1:
-			button1 = types.InlineKeyboardButton('Следующий заказ >>', callback_data = 'next_order')
+			button1 = types.InlineKeyboardButton('Next >>', callback_data = 'next_order')
 			keyboard.add(button1)
-		button2 = types.InlineKeyboardButton('Подобрать подходящих блогеров', callback_data = 'match_bloggers')
-		button4 = types.InlineKeyboardButton('Редактировать заказ', callback_data = 'edit_order')
-		button3 = types.InlineKeyboardButton('Удалить заказ', callback_data = 'delete_order')
+		button2 = types.InlineKeyboardButton('Match me with the perfect bloggers', callback_data = 'match_bloggers')
+		button4 = types.InlineKeyboardButton('Edit order', callback_data = 'edit_order')
+		button3 = types.InlineKeyboardButton('Delete order', callback_data = 'delete_order')
 		keyboard.add(button2)
 		keyboard.add(button4)
 		keyboard.add(button3)
 		info = order_info(Order(orders_list[cur_order]))
 		mess = bot.send_message(chat_id, info, reply_markup = keyboard)
 		users[chat_id].order_mess_id = mess.message_id
-	elif message.text == 'Обратная связь' or users[chat_id].feedback_st == True:
+	elif message.text == 'Feedback' or users[chat_id].feedback_st == True:
 		if users[chat_id].feedback_st == False:
 			users[chat_id].feedback_st = True
 			keyboard = types.ReplyKeyboardMarkup(True, True)
-			keyboard.row('Назад в меню')
-			bot.send_message(chat_id, 'Оставьте свой отзыв или предложение, отправив нам сообщение!', reply_markup=keyboard)
+			keyboard.row('Back to menu')
+			bot.send_message(chat_id, 'Please, leave us your feedback on our work. We will be very grateful to you!', reply_markup=keyboard)
 		else:
 			bot.send_message(365391038, str(message.text) + '\nот ' + str(message.from_user.last_name) + ' ' + str(message.from_user.first_name) + ' @' + str(message.from_user.username) )
 			default_vars(chat_id)
-			bot.send_message(chat_id, 'Спасибо за оставленный отзыв!')
+			bot.send_message(chat_id, 'Thank you for your feedback!')
 			main_menu(chat_id)
 
 @bot.callback_query_handler(func=lambda call:True)
@@ -944,8 +920,8 @@ def callback(call):
 	if call.data == 'delete_profile':
 		db.delete_profile(chat_id)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.row('Создать профиль')
-		bot.send_message(chat_id, 'Ваш профиль был успешно удален!', reply_markup=keyboard)
+		keyboard.row('Create a profile')
+		bot.send_message(chat_id, 'Your profile has benn successfully deleted!', reply_markup=keyboard)
 	elif call.data == 'next_blogger' or call.data == 'prev_blogger':
 		users[chat_id].cur_blogger += 1
 		if call.data == 'prev_blogger':
@@ -961,14 +937,14 @@ def callback(call):
 				users[chat_id].cur_blogger -= 1
 			return
 		if cur_blogger != len(search_list) - 1 and cur_blogger > 0:
-			button1 = types.InlineKeyboardButton('След >>', callback_data = 'next_blogger')
-			button2 = types.InlineKeyboardButton('<< Пред', callback_data = 'prev_blogger')
+			button1 = types.InlineKeyboardButton('Next >>', callback_data = 'next_blogger')
+			button2 = types.InlineKeyboardButton('<< Prev', callback_data = 'prev_blogger')
 			keyboard.row(button2, button1)
 		elif cur_blogger != len(search_list) - 1:
-			keyboard.add(types.InlineKeyboardButton('Следующий блогер >>', callback_data = 'next_blogger'))
+			keyboard.add(types.InlineKeyboardButton('Next blogger >>', callback_data = 'next_blogger'))
 		elif cur_blogger > 0:
-			keyboard.add(types.InlineKeyboardButton('<< Предыдущий блогер', callback_data = 'prev_blogger'))			
-		button = types.InlineKeyboardButton('Фильтровать по..', callback_data = 'filters')
+			keyboard.add(types.InlineKeyboardButton('<< Previous blogger', callback_data = 'prev_blogger'))			
+		button = types.InlineKeyboardButton('Filter by..', callback_data = 'filters')
 		keyboard.add(button)
 		# button = types.InlineKeyboardButton('Сортировать по..', callback_data = 'sort')
 		# keyboard.add(button)
@@ -976,7 +952,7 @@ def callback(call):
 		profile = db.get_profile_by_id(blogger_id)
 		profile = Blogger(profile)
 		text = profile_info(profile)
-		text += '\n\nФильтры: '
+		text += '\n\nFilters: '
 		for a in users[chat_id].filters:
 			for b in a:
 				if b == a[-1] and a == users[chat_id].filters[-1]:
@@ -990,11 +966,11 @@ def callback(call):
 		bot.edit_message_media(chat_id = chat_id, message_id = search_mess_id, media = media, reply_markup = keyboard)
 	elif call.data == 'filters':
 		keyboard = types.InlineKeyboardMarkup()
-		button1 = types.InlineKeyboardButton('интересам', callback_data = 'filter_sub')
-		button2 = types.InlineKeyboardButton('региону', callback_data = 'filter_geo')
-		button3 = types.InlineKeyboardButton('возрасту', callback_data = 'filter_age')
-		button4 = types.InlineKeyboardButton('полу', callback_data = 'filter_gender')
-		button5 = types.InlineKeyboardButton('назад', callback_data = 'search_back_main')
+		button1 = types.InlineKeyboardButton('interests', callback_data = 'filter_sub')
+		button2 = types.InlineKeyboardButton('location', callback_data = 'filter_geo')
+		button3 = types.InlineKeyboardButton('age', callback_data = 'filter_age')
+		button4 = types.InlineKeyboardButton('gender', callback_data = 'filter_gender')
+		button5 = types.InlineKeyboardButton('go back', callback_data = 'search_back_main')
 		keyboard.row(button1, button2)
 		keyboard.row(button3, button4)
 		keyboard.add(button5)
@@ -1006,14 +982,14 @@ def callback(call):
 		search_mess_id = users[chat_id].search_mess_id
 		keyboard = types.InlineKeyboardMarkup()
 		if cur_blogger != len(search_list) - 1 and cur_blogger > 0:
-			button1 = types.InlineKeyboardButton('След >>', callback_data = 'next_blogger')
-			button2 = types.InlineKeyboardButton('<< Пред', callback_data = 'prev_blogger')
+			button1 = types.InlineKeyboardButton('Next >>', callback_data = 'next_blogger')
+			button2 = types.InlineKeyboardButton('<< Prev', callback_data = 'prev_blogger')
 			keyboard.row(button2, button1)
 		elif cur_blogger != len(search_list) - 1:
-			keyboard.add(types.InlineKeyboardButton('Следующий блогер >>', callback_data = 'next_blogger'))
+			keyboard.add(types.InlineKeyboardButton('Next blogger >>', callback_data = 'next_blogger'))
 		elif cur_blogger > 0:
-			keyboard.add(types.InlineKeyboardButton('<< Предыдущий блогер', callback_data = 'prev_blogger'))			
-		button = types.InlineKeyboardButton('Фильтровать по..', callback_data = 'filters')
+			keyboard.add(types.InlineKeyboardButton('<< Previous blogger', callback_data = 'prev_blogger'))			
+		button = types.InlineKeyboardButton('Filter by..', callback_data = 'filters')
 		keyboard.add(button)
 		# button = types.InlineKeyboardButton('Сортировать по..', callback_data = 'sort')
 		# keyboard.add(button)
@@ -1026,10 +1002,10 @@ def callback(call):
 			keyboard.row(types.InlineKeyboardButton(categories[i-1], callback_data = 'filter_sub' + str(i-1))\
 				, types.InlineKeyboardButton(categories[i], callback_data = 'filter_sub' + str(i)))
 		if n % 2 != 0:
-			button6 = types.InlineKeyboardButton('Назад', callback_data = 'filters')
+			button6 = types.InlineKeyboardButton('Go back', callback_data = 'filters')
 			keyboard.row(types.InlineKeyboardButton(categories[n-1], callback_data = 'filter_sub' + str(n-1)), button6)
 		else:	
-			button6 = types.InlineKeyboardButton('Назад', callback_data = 'filters')
+			button6 = types.InlineKeyboardButton('Go back', callback_data = 'filters')
 			keyboard.row(button6)
 		users[chat_id].last_keyboard = keyboard
 		bot.edit_message_reply_markup(chat_id = chat_id, message_id = users[chat_id].search_mess_id, reply_markup = keyboard)
@@ -1053,10 +1029,10 @@ def callback(call):
 			keyboard.row(types.InlineKeyboardButton(cities[i-1], callback_data = 'filter_geo' + str(i-1))\
 				, types.InlineKeyboardButton(cities[i], callback_data = 'filter_geo' + str(i)))
 		if n % 2 != 0:
-			button6 = types.InlineKeyboardButton('Назад', callback_data = 'filters')
+			button6 = types.InlineKeyboardButton('Go back', callback_data = 'filters')
 			keyboard.row(types.InlineKeyboardButton(cities[n-1], callback_data = 'filter_geo' + str(n-1)), button6)
 		else:	
-			button6 = types.InlineKeyboardButton('Назад', callback_data = 'filters')
+			button6 = types.InlineKeyboardButton('Go back', callback_data = 'filters')
 			keyboard.row(button6)
 		users[chat_id].last_keyboard = keyboard
 		bot.edit_message_reply_markup(chat_id = chat_id, message_id = users[chat_id].search_mess_id, reply_markup = keyboard)
@@ -1080,7 +1056,7 @@ def callback(call):
 		button3 = types.InlineKeyboardButton('25-34', callback_data = 'filter_age_25-34')
 		button4 = types.InlineKeyboardButton('35-44', callback_data = 'filter_age_35-44')
 		button5 = types.InlineKeyboardButton('45-54', callback_data = 'filter_age_45-54')
-		button6 = types.InlineKeyboardButton('назад', callback_data = 'filters')
+		button6 = types.InlineKeyboardButton('go back', callback_data = 'filters')
 		keyboard.row(button1, button2)
 		keyboard.row(button3, button4)
 		keyboard.row(button5, button6)
@@ -1101,9 +1077,9 @@ def callback(call):
 		refresh_search(call.message)
 	elif call.data == 'filter_gender':
 		keyboard = types.InlineKeyboardMarkup()
-		button1 = types.InlineKeyboardButton('мужчины', callback_data = 'filter_gender_male')
-		button2 = types.InlineKeyboardButton('женщины', callback_data = 'filter_gender_female')
-		button3 = types.InlineKeyboardButton('назад', callback_data = 'filters')
+		button1 = types.InlineKeyboardButton('male', callback_data = 'filter_gender_male')
+		button2 = types.InlineKeyboardButton('female', callback_data = 'filter_gender_female')
+		button3 = types.InlineKeyboardButton('go back', callback_data = 'filters')
 		keyboard.row(button1, button2)
 		keyboard.row(button3)
 		users[chat_id].last_keyboard = keyboard
@@ -1111,9 +1087,9 @@ def callback(call):
 	elif call.data[:13] == 'filter_gender':
 		key = call.data[14:]
 		if key == 'male':
-			key = 'мужчины'
+			key = 'male'
 		if key == 'female':
-			key = 'женщины'
+			key = 'female'
 		check = False
 		for sub in users[chat_id].filters[3]:
 			if sub == key:
@@ -1128,8 +1104,8 @@ def callback(call):
 		refresh_search(call.message)
 	elif call.data == 'sort':
 		keyboard = types.InlineKeyboardMarkup()
-		button1 = types.InlineKeyboardButton('подписчикам', callback_data = 'sort_followers')
-		button2 = types.InlineKeyboardButton('назад', callback_data = 'search_back_main')
+		button1 = types.InlineKeyboardButton('followers', callback_data = 'sort_followers')
+		button2 = types.InlineKeyboardButton('go back', callback_data = 'search_back_main')
 		keyboard.row(button1, button2)
 		users[chat_id].last_keyboard = keyboard
 		bot.edit_message_reply_markup(chat_id = chat_id, message_id = users[chat_id].search_mess_id, reply_markup = keyboard)
@@ -1150,18 +1126,18 @@ def callback(call):
 				users[chat_id].cur_order -= 1
 			return
 		if cur_order != len(orders_list) - 1 and cur_order > 0:
-			button1 = types.InlineKeyboardButton('След >>', callback_data = 'next_order')
-			button2 = types.InlineKeyboardButton('<< Пред', callback_data = 'prev_order')
+			button1 = types.InlineKeyboardButton('Next >>', callback_data = 'next_order')
+			button2 = types.InlineKeyboardButton('<< Prev', callback_data = 'prev_order')
 			keyboard.row(button2, button1)
 		elif cur_order != len(orders_list) - 1:
-			keyboard.add(types.InlineKeyboardButton('Следующий заказ >>', callback_data = 'next_order'))
+			keyboard.add(types.InlineKeyboardButton('Next >>', callback_data = 'next_order'))
 		elif cur_order > 0:
-			keyboard.add(types.InlineKeyboardButton('<< Предыдущий заказ', callback_data = 'prev_order'))			
-		button = types.InlineKeyboardButton('Подобрать подходящих блогеров', callback_data = 'match_bloggers')
+			keyboard.add(types.InlineKeyboardButton('<< Previous', callback_data = 'prev_order'))			
+		button = types.InlineKeyboardButton('Match me with the perfect bloggers', callback_data = 'match_bloggers')
 		keyboard.add(button)
-		button = types.InlineKeyboardButton('Редактировать заказ', callback_data = 'edit_order')
+		button = types.InlineKeyboardButton('Edit order', callback_data = 'edit_order')
 		keyboard.add(button)
-		button = types.InlineKeyboardButton('Удалить заказ', callback_data = 'delete_order')
+		button = types.InlineKeyboardButton('Change order', callback_data = 'delete_order')
 		keyboard.add(button)
 		info = order_info(Order(orders_list[cur_order]))
 		if call.data == 'back_to_order':
@@ -1173,14 +1149,14 @@ def callback(call):
 	elif call.data == 'delete_order':
 		db.delete_order(users[chat_id].orders_list[users[chat_id].cur_order][0])
 		bot.edit_message_text(chat_id = chat_id, message_id = users[chat_id].order_mess_id, text = 
-			'Ваш заказ был успешно удален!')
+			'Your order has been successfully deleted!')
 		main_menu(chat_id)
 	elif call.data == 'create_order_true':
 		bot.delete_message(chat_id = chat_id, message_id = call.message.message_id)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
-		keyboard.add('Назад в меню')
+		keyboard.add('Back to menu')
 		users[chat_id].mode = 1
-		bot.send_message(chat_id, 'Какое название у твеого бренда?', reply_markup = keyboard)
+		bot.send_message(chat_id, 'What is the name of your brand?', reply_markup = keyboard)
 	elif call.data == 'create_order_false':
 		bot.delete_message(chat_id = chat_id, message_id = call.message.message_id)
 		main_menu(chat_id)
@@ -1190,9 +1166,9 @@ def callback(call):
 		cur_match_blogger = users[chat_id].cur_match_blogger = 0
 		keyboard = types.InlineKeyboardMarkup()
 		if len(match_bloggers) > 1:
-			keyboard.add(types.InlineKeyboardButton('Следующий блогер >>', callback_data = 'next_match_blogger'))
-		keyboard.add(types.InlineKeyboardButton('Пригласить к сотрудничеству', callback_data = 'invite_blogger'))
-		keyboard.add(types.InlineKeyboardButton('Назад к заказу', callback_data = 'back_to_order'))
+			keyboard.add(types.InlineKeyboardButton('Next blogger >>', callback_data = 'next_match_blogger'))
+		keyboard.add(types.InlineKeyboardButton('Invite to cooperation', callback_data = 'invite_blogger'))
+		keyboard.add(types.InlineKeyboardButton('Back to the order', callback_data = 'back_to_order'))
 		blogger = Blogger(match_bloggers[cur_match_blogger])
 		info = profile_info(blogger)
 		photo = photos.download_photo(blogger.profile_photo_id)
@@ -1214,15 +1190,15 @@ def callback(call):
 				users[chat_id].cur_match_blogger -= 1
 			return
 		if cur_match_blogger != len(match_bloggers) - 1 and cur_match_blogger > 0:
-			button1 = types.InlineKeyboardButton('След >>', callback_data = 'next_match_blogger')
-			button2 = types.InlineKeyboardButton('<< Пред', callback_data = 'prev_match_blogger')
+			button1 = types.InlineKeyboardButton('Next >>', callback_data = 'next_match_blogger')
+			button2 = types.InlineKeyboardButton('<< Prev', callback_data = 'prev_match_blogger')
 			keyboard.row(button2, button1)
 		elif cur_match_blogger != len(match_bloggers) - 1:
-			keyboard.add(types.InlineKeyboardButton('Следующий заказ >>', callback_data = 'next_match_blogger'))
+			keyboard.add(types.InlineKeyboardButton('Next >>', callback_data = 'next_match_blogger'))
 		elif cur_match_blogger > 0:
-			keyboard.add(types.InlineKeyboardButton('<< Предыдущий заказ', callback_data = 'prev_match_blogger'))			
-		keyboard.add(types.InlineKeyboardButton('Пригласить к сотрудничеству', callback_data = 'invite_blogger'))
-		keyboard.add(types.InlineKeyboardButton('Назад к заказу', callback_data = 'back_to_order'))
+			keyboard.add(types.InlineKeyboardButton('<< Previous', callback_data = 'prev_match_blogger'))			
+		keyboard.add(types.InlineKeyboardButton('Invite to cooperation', callback_data = 'invite_blogger'))
+		keyboard.add(types.InlineKeyboardButton('Back to the order', callback_data = 'back_to_order'))
 		blogger = Blogger(match_bloggers[cur_match_blogger])
 		info = profile_info(blogger)
 		photo = photos.download_photo(blogger.profile_photo_id)
@@ -1231,15 +1207,13 @@ def callback(call):
 			, media = media, reply_markup = keyboard)
 	elif call.data == 'invite_blogger':
 		blogger_chat_id = users[chat_id].match_bloggers[users[chat_id].cur_match_blogger][13]
-		bot.send_message(blogger_chat_id, 'Вам пришло приглашение к сотрудничеству. Подбробная информация о\
-		рекламодателе будет отправлена в следующем сообщении.')
+		bot.send_message(blogger_chat_id, 'You have recieved an invitation to the cooperation. Full information about the advertiser and their order will be sent in the next message')
 		info = order_info(Order(users[chat_id].orders_list[users[chat_id].cur_order]))
 		bot.send_message(blogger_chat_id, info)
-		bot.send_message(blogger_chat_id, 'Если Вы согласны сотрудничать просим Вас свзяаться напрямую\
-			с рекламодетелем через мессенджер Telegram.\nTelegram аккаунт рекламодателя: ' + \
+		bot.send_message(blogger_chat_id, 'If you are ready to cooperate, please contact the advertiser through the Telegram\nTelegram account of the advertiser: ' + \
 			users[chat_id].orders_list[users[chat_id].cur_order][13])
-		bot.send_message(chat_id, 'Приглашение к сотрудничеству данному блогеру было отправлено.\
-			Ожидайте обратной связи.')
+		bot.send_message(chat_id, 'An invitation to cooperation was sent to the blogger. \
+			Please, wait for the response!')
 	elif call.data == 'next_match_order' or call.data == 'prev_match_order':
 		users[chat_id].cur_match_order += 1
 		if call.data == 'prev_match_order':
@@ -1255,40 +1229,38 @@ def callback(call):
 				users[chat_id].cur_match_order -= 1
 			return
 		if cur_match_order != len(match_orders) - 1 and cur_match_order > 0:
-			button1 = types.InlineKeyboardButton('След >>', callback_data = 'next_match_order')
-			button2 = types.InlineKeyboardButton('<< Пред', callback_data = 'prev_match_order')
+			button1 = types.InlineKeyboardButton('Next >>', callback_data = 'next_match_order')
+			button2 = types.InlineKeyboardButton('<< Prev', callback_data = 'prev_match_order')
 			keyboard.row(button2, button1)
 		elif cur_match_order != len(match_orders) - 1:
-			keyboard.add(types.InlineKeyboardButton('Следующий заказ >>', callback_data = 'next_match_order'))
+			keyboard.add(types.InlineKeyboardButton('Next >>', callback_data = 'next_match_order'))
 		elif cur_match_order > 0:
-			keyboard.add(types.InlineKeyboardButton('<< Предыдущий заказ', callback_data = 'prev_match_order'))			
-		button = types.InlineKeyboardButton('Пригласить к сотрудничеству', callback_data = 'invite_order')
+			keyboard.add(types.InlineKeyboardButton('<< Previous', callback_data = 'prev_match_order'))			
+		button = types.InlineKeyboardButton('Invite to cooperation', callback_data = 'invite_order')
 		keyboard.add(button)
 		info = order_info(Order(match_orders[cur_match_order]))
 		bot.edit_message_text(chat_id = chat_id, message_id = match_orders_id, text = info, reply_markup = keyboard)
 	elif call.data == 'invite_order':
 		order_chat_id = users[chat_id].match_orders[users[chat_id].cur_match_order][12]
-		bot.send_message(order_chat_id, 'Вам пришло приглашение к сотрудничеству. Подробная информация о\
-		блогере будет отправлена в следующем сообщении.')
+		bot.send_message(order_chat_id, 'You have recieved an invitation to cooperation. Full info about the blogger will be sent in the next message')
 		profile = Blogger(db.get_profile_by_chat_id(chat_id))
 		info = profile_info(profile)
 		bot.send_message(order_chat_id, info)
-		bot.send_message(order_chat_id, 'Если Вы согласны сотрудничать просим Вас свзяаться напрямую\
-			с блогером через мессенджер Telegram.\nTelegram аккаунт блогера: ' + profile.telegram_username)
-		bot.send_message(chat_id, 'Приглашение к сотрудничеству данному рекламодателю было отправлено.\
-			Ожидайте обратной связи.')
+		bot.send_message(order_chat_id, 'If you are ready to work, please contact the blogger through the Telegram\nTelegram account of the blogger: ' + profile.telegram_username)
+		bot.send_message(chat_id, 'An invitation to cooperation was sent to this advertiser.\
+			Please, wait for the response!')
 	elif call.data == 'edit_profile':
 		profile = Blogger(db.get_profile_by_chat_id(chat_id))
 		info = profile_info(profile)
-		info += '\n\n*Выбери то, что ты хочешь изменить*'
+		info += '\n\n*Choose what you would like to change*'
 		keyboard = types.InlineKeyboardMarkup()
-		button1 = types.InlineKeyboardButton('Имя', callback_data = 'edit_name')
-		button2 = types.InlineKeyboardButton('Логин', callback_data = 'edit_login')
-		button3 = types.InlineKeyboardButton('Охват', callback_data = 'edit_coverage')
-		button4 = types.InlineKeyboardButton('Тематика', callback_data = 'edit_subjects')
-		button5 = types.InlineKeyboardButton('Цена рекламы', callback_data = 'edit_price')
-		button6 = types.InlineKeyboardButton('Данные о подписчиках', callback_data = 'edit_followers')
-		button7 = types.InlineKeyboardButton('Назад', callback_data = 'back_to_profile')
+		button1 = types.InlineKeyboardButton('Name', callback_data = 'edit_name')
+		button2 = types.InlineKeyboardButton('Login', callback_data = 'edit_login')
+		button3 = types.InlineKeyboardButton('Coverage', callback_data = 'edit_coverage')
+		button4 = types.InlineKeyboardButton('Subject', callback_data = 'edit_subjects')
+		button5 = types.InlineKeyboardButton('Price', callback_data = 'edit_price')
+		button6 = types.InlineKeyboardButton('Info about orders', callback_data = 'edit_followers')
+		button7 = types.InlineKeyboardButton('Go back', callback_data = 'back_to_profile')
 		keyboard.row(button1, button2)
 		keyboard.row(button3, button4)
 		keyboard.row(button5)
@@ -1298,28 +1270,28 @@ def callback(call):
 			parse_mode = 'Markdown', reply_markup = keyboard)
 	elif call.data == 'edit_name':
 		users[chat_id].profile_edit_mode = 1
-		bot.send_message(chat_id, 'Напиши мне свое новое имя')
+		bot.send_message(chat_id, 'Type your new name')
 	elif call.data == 'edit_login':
 		users[chat_id].profile_edit_mode = 2
-		bot.send_message(chat_id, 'Напиши мне свой логин в Instagram')
+		bot.send_message(chat_id, 'Type your new Instagram login')
 	elif call.data == 'edit_coverage':
 		profile = Blogger(db.get_profile_by_chat_id(chat_id))
 		info = profile_info(profile)
-		info += '\n\n*Охват чего ты хочешь изменить?*'
+		info += '\n\n*What exactly you would like to edit?*'
 		keyboard = types.InlineKeyboardMarkup()
-		button1 = types.InlineKeyboardButton('Публикации', callback_data = 'edit_post_coverage')
-		button2 = types.InlineKeyboardButton('Истории', callback_data = 'edit_story_coverage')
-		button3 = types.InlineKeyboardButton('Назад', callback_data = 'edit_profile')
+		button1 = types.InlineKeyboardButton('Posts', callback_data = 'edit_post_coverage')
+		button2 = types.InlineKeyboardButton('Stories', callback_data = 'edit_story_coverage')
+		button3 = types.InlineKeyboardButton('Go back', callback_data = 'edit_profile')
 		keyboard.row(button1, button2)
 		keyboard.row(button3)
 		bot.edit_message_caption(chat_id = chat_id, message_id = users[chat_id].profile_mess_id, caption = info, \
 			parse_mode = 'Markdown', reply_markup = keyboard)
 	elif call.data == 'edit_post_coverage':
 		users[chat_id].profile_edit_mode = 3
-		bot.send_message(chat_id, 'Укажи новый охват одной публикации')
+		bot.send_message(chat_id, 'Type your new posts coverage')
 	elif call.data == 'edit_story_coverage':
 		users[chat_id].profile_edit_mode = 4
-		bot.send_message(chat_id, 'Укажи новый охват одной истории')
+		bot.send_message(chat_id, 'Type your new stories coverage')
 	elif call.data == 'edit_subjects':
 		users[chat_id].profile_edit_mode = 5
 		keyboard = types.ReplyKeyboardMarkup(True, False)
@@ -1328,20 +1300,20 @@ def callback(call):
 			keyboard.row(categories[i-1], categories[i])
 		if n % 2 != 0:
 			keyboard.row(categories[n-1])
-		bot.send_message(chat_id, 'Укажи тематики своего аккаунта', reply_markup = keyboard)
+		bot.send_message(chat_id, 'Type a new subject/s(interests) of your audience', reply_markup = keyboard)
 	elif call.data == 'edit_price':
 		users[chat_id].profile_edit_mode = 6
-		bot.send_message(chat_id, 'Напиши новую стоимость рекламной интеграции за одну публикацию(в тенге)')
+		bot.send_message(chat_id, 'Type your new price for a post (in CAD)')
 	elif call.data == 'edit_followers':
 		profile = Blogger(db.get_profile_by_chat_id(chat_id))
 		info = profile_info(profile)
-		info += '\n\n*Какую инфорацию о подписчиках ты хочешь изменить?*'
+		info += '\n\n*What info about followers you would like to change?*'
 		keyboard = types.InlineKeyboardMarkup()
-		button5 = types.InlineKeyboardButton('Количество', callback_data = 'edit_followers_num')
-		button1 = types.InlineKeyboardButton('География', callback_data = 'edit_geo')
-		button2 = types.InlineKeyboardButton('Средний возраст', callback_data = 'edit_age')
-		button3 = types.InlineKeyboardButton('Пол', callback_data = 'edit_gender')
-		button4 = types.InlineKeyboardButton('Назад', callback_data = 'edit_profile')
+		button5 = types.InlineKeyboardButton('Numbers', callback_data = 'edit_followers_num')
+		button1 = types.InlineKeyboardButton('Location', callback_data = 'edit_geo')
+		button2 = types.InlineKeyboardButton('Average age', callback_data = 'edit_age')
+		button3 = types.InlineKeyboardButton('Gender', callback_data = 'edit_gender')
+		button4 = types.InlineKeyboardButton('Go back', callback_data = 'edit_profile')
 		keyboard.row(button1)
 		keyboard.row(button2)
 		keyboard.row(button3)
@@ -1356,43 +1328,43 @@ def callback(call):
 			keyboard.row(cities[i-1], cities[i])
 		if n % 2 != 0:
 			keyboard.row(cities[n-1])
-		bot.send_message(chat_id, 'Укажи географию своих подписчиков', reply_markup = keyboard)
+		bot.send_message(chat_id, 'Type your new follower geography', reply_markup = keyboard)
 	elif call.data == 'edit_age':
 		users[chat_id].profile_edit_mode = 9
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('13-17', '18-24', '25-34')
 		keyboard.row('35-44', '45-54')
-		bot.send_message(chat_id, 'Укажи средний возраст своих подписчиков', reply_markup = keyboard)
+		bot.send_message(chat_id, 'Choose your new average follower age', reply_markup = keyboard)
 	elif call.data == 'edit_gender':
 		users[chat_id].profile_edit_mode = 10
-		bot.send_message(chat_id, 'Сколько процентов твоей аудитории женская?')
+		bot.send_message(chat_id, 'What is the percantage of your audience is female?')
 	elif call.data == 'edit_followers_num':
 		users[chat_id].profile_edit_mode = 11
-		bot.send_message(chat_id, 'Какое у тебя количество подписчиков на данный момент?')
+		bot.send_message(chat_id, 'What is your current number of followers?')
 	elif call.data == 'back_to_profile':
 		profile = Blogger(db.get_profile_by_chat_id(chat_id))
 		info = profile_info(profile)
 		keyboard = types.InlineKeyboardMarkup()
-		button = types.InlineKeyboardButton('Редактировать профиль', callback_data = 'edit_profile')
+		button = types.InlineKeyboardButton('Edit profile', callback_data = 'edit_profile')
 		keyboard.add(button)
-		button = types.InlineKeyboardButton('Удалить профиль', callback_data = 'delete_profile')
+		button = types.InlineKeyboardButton('Delete profile', callback_data = 'delete_profile')
 		keyboard.add(button)
 		bot.edit_message_caption(chat_id = chat_id, message_id = users[chat_id].profile_mess_id, \
 		caption = info, reply_markup = keyboard) 
 	elif call.data == 'edit_order':
 		order = users[chat_id].orders_list[users[chat_id].cur_order]
 		info = order_info(Order(order))
-		info += '\n\n*Выбери то, что ты хочешь изменить*'
+		info += '\n\n*Choose what you would like to change*'
 		keyboard = types.InlineKeyboardMarkup()
-		button1 = types.InlineKeyboardButton('Название', callback_data = 'edit_order_name')
-		button2 = types.InlineKeyboardButton('Логин', callback_data = 'edit_order_login')
-		button3 = types.InlineKeyboardButton('Описание', callback_data = 'edit_descr')
-		button4 = types.InlineKeyboardButton('Продвижение', callback_data = 'edit_post_or_story')
-		button5 = types.InlineKeyboardButton('Охват', callback_data = 'edit_order_coverage')
-		button6 = types.InlineKeyboardButton('Бюджет', callback_data = 'edit_budget')
-		button7 = types.InlineKeyboardButton('Доп.комментарий', callback_data = 'edit_comments')
-		button8 = types.InlineKeyboardButton('Целевая аудитория', callback_data = 'edit_target')
-		button9 = types.InlineKeyboardButton('Назад', callback_data = 'back_to_order')
+		button1 = types.InlineKeyboardButton('Name', callback_data = 'edit_order_name')
+		button2 = types.InlineKeyboardButton('Login', callback_data = 'edit_order_login')
+		button3 = types.InlineKeyboardButton('Description', callback_data = 'edit_descr')
+		button4 = types.InlineKeyboardButton('Promotion', callback_data = 'edit_post_or_story')
+		button5 = types.InlineKeyboardButton('Coverage', callback_data = 'edit_order_coverage')
+		button6 = types.InlineKeyboardButton('Budget', callback_data = 'edit_budget')
+		button7 = types.InlineKeyboardButton('Comments', callback_data = 'edit_comments')
+		button8 = types.InlineKeyboardButton('Target audience', callback_data = 'edit_target')
+		button9 = types.InlineKeyboardButton('Go back', callback_data = 'back_to_order')
 		keyboard.row(button1, button2, button3)
 		keyboard.row(button4, button5, button6)
 		keyboard.row(button7, button8)
@@ -1401,38 +1373,38 @@ def callback(call):
 			parse_mode = 'Markdown', reply_markup = keyboard)
 	elif call.data == 'edit_order_name':
 		users[chat_id].order_edit_mode = 1
-		bot.send_message(chat_id, 'Напиши мне новое название бренда')
+		bot.send_message(chat_id, 'Type your new name of the brand')
 	elif call.data == 'edit_order_login':
 		users[chat_id].order_edit_mode = 2
-		bot.send_message(chat_id, 'Напиши мне новый логин в Instagram')
+		bot.send_message(chat_id, 'Type your new Instagram login')
 	elif call.data == 'edit_descr':
 		users[chat_id].order_edit_mode = 3
-		bot.send_message(chat_id, 'Отправь новое описание к продукту')
+		bot.send_message(chat_id, 'Type your new description of your product')
 	elif call.data == 'edit_post_or_story':
 		users[chat_id].order_edit_mode = 4
 		keyboard = types.ReplyKeyboardMarkup(True, True)
-		keyboard.row('Публикация', 'История')
-		keyboard.row('Оба варианта')
-		bot.send_message(chat_id, 'Укажи какой метод продвижения тебя интересует', reply_markup = keyboard)
+		keyboard.row('Post', 'Stories')
+		keyboard.row('Both')
+		bot.send_message(chat_id, 'Choose the type of your promotion', reply_markup = keyboard)
 	elif call.data == 'edit_order_coverage':
 		users[chat_id].order_edit_mode = 5
-		bot.send_message(chat_id, 'Какой у тебя необходимый охват для продвижения?')
+		bot.send_message(chat_id, 'What is your desired promotion coverage?')
 	elif call.data == 'edit_budget':
 		users[chat_id].order_edit_mode = 6
-		bot.send_message(chat_id, 'Какой у тебя новый бюджет?')
+		bot.send_message(chat_id, 'Type your new budget?')
 	elif call.data == 'edit_comments':
 		users[chat_id].order_edit_mode = 7
-		bot.send_message(chat_id, 'Отправь мне свои дополнительные комментарии к заказу')
+		bot.send_message(chat_id, 'Type your new comments to the order')
 	elif call.data == 'edit_target':
 		order = users[chat_id].orders_list[users[chat_id].cur_order]
 		info = order_info(Order(order))
-		info += '\n\n*Какие данные о целевой аудитории ты хочешь изменить?*'
+		info += '\n\n*What exactly you would like to change about your target audience?*'
 		keyboard = types.InlineKeyboardMarkup()
-		button1 = types.InlineKeyboardButton('География', callback_data = 'edit_order_geo')
-		button2 = types.InlineKeyboardButton('Ср.возраст', callback_data = 'edit_order_age')
-		button3 = types.InlineKeyboardButton('Интересы', callback_data = 'edit_order_sub')
-		button4 = types.InlineKeyboardButton('Пол', callback_data = 'edit_order_gender')
-		button5 = types.InlineKeyboardButton('Назад', callback_data = 'edit_order')
+		button1 = types.InlineKeyboardButton('Location', callback_data = 'edit_order_geo')
+		button2 = types.InlineKeyboardButton('Avg age', callback_data = 'edit_order_age')
+		button3 = types.InlineKeyboardButton('Interests', callback_data = 'edit_order_sub')
+		button4 = types.InlineKeyboardButton('Gender', callback_data = 'edit_order_gender')
+		button5 = types.InlineKeyboardButton('Go back', callback_data = 'edit_order')
 		keyboard.row(button1, button2)
 		keyboard.row(button3, button4)
 		keyboard.row(button5)
@@ -1446,13 +1418,13 @@ def callback(call):
 			keyboard.row(cities[i-1], cities[i])
 		if n % 2 != 0:
 			keyboard.row(cities[n-1])
-		bot.send_message(chat_id, 'Укажи географию своей целевой аудитории', reply_markup = keyboard)
+		bot.send_message(chat_id, 'Choose your new location of the target audience', reply_markup = keyboard)
 	elif call.data == 'edit_order_age':
 		users[chat_id].order_edit_mode = 9
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('13-17', '18-24', '25-34')
 		keyboard.row('35-44', '45-54')
-		bot.send_message(chat_id, 'Укажи средний возраст своей целевой аудитории', reply_markup = keyboard)
+		bot.send_message(chat_id, 'Choose the average follower age of your target audience', reply_markup = keyboard)
 	elif call.data == 'edit_order_sub':
 		users[chat_id].order_edit_mode = 10
 		keyboard = types.ReplyKeyboardMarkup(True, False)
@@ -1461,12 +1433,12 @@ def callback(call):
 			keyboard.row(categories[i-1], categories[i])
 		if n % 2 != 0:
 			keyboard.row(categories[n-1])
-		bot.send_message(chat_id, 'Укажи интересы своей целевой аудитории', reply_markup = keyboard)
+		bot.send_message(chat_id, 'Type your target audience new interests', reply_markup = keyboard)
 	elif call.data == 'edit_order_gender':
 		users[chat_id].order_edit_mode = 11
 		keyboard = types.ReplyKeyboardMarkup(True, True)
-		keyboard.row('Мужчины', 'Женщины')
-		keyboard.row('Все')
-		bot.send_message(chat_id, 'Укажи пол своей целевой аудитории', reply_markup=keyboard)		
+		keyboard.row('Male', 'Female')
+		keyboard.row('Both')
+		bot.send_message(chat_id, 'Type your new gender of the target audience', reply_markup=keyboard)		
 
 bot.polling(none_stop=True)

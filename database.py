@@ -6,18 +6,18 @@ from profiles import Blogger, categories, cities
 class Database:
 	def __init__(self):
 		#local host------------------
-		# self.con = psycopg2.connect(
-		#   database = "bloggerskz",
-		#   user ="postgres", 
-		#   password="sbazgugu", 
-		#   host="localhost", 
-		#   port="5432"
-		# )
+		self.con = psycopg2.connect(
+		  database = "bloggersca",
+		  user ="postgres", 
+		  password="qW!1234567", 
+		  host="localhost", 
+		  port="5432"
+		)
 		# #----------------------------
 
 		#heroku----------------------
-		DATABASE_URL = os.environ['DATABASE_URL']
-		self.con = psycopg2.connect(DATABASE_URL, sslmode='require')
+		# DATABASE_URL = os.environ['DATABASE_URL']
+		# self.con = psycopg2.connect(DATABASE_URL, sslmode='require')
 		#----------------------------
 
 		self.cur = self.con.cursor()
