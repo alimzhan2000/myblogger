@@ -6,7 +6,8 @@ from telebot import types
 from telebot.types import InputMediaPhoto
 from profiles import Blogger, Order, categories, cities
 
-token = "1084778927:AAGiGZSUjhh-U5YT0CzHhBwqZnRs2COBxOM" #mainbot
+token = "1237204821:AAHxgeHjsa8uSkyoCZWTgHUBDCXbd7FSVdg"
+#token = "1084778927:AAGiGZSUjhh-U5YT0CzHhBwqZnRs2COBxOM" #mainbot
 # token = "962351766:AAE_2ax6GANwka1ldGni2xMbV7-CPZboPEk" #testbot
 bot = telebot.TeleBot(token)
 db = Database()
@@ -234,7 +235,7 @@ def start(message):
 	default_vars(chat_id)
 	keyboard = types.ReplyKeyboardMarkup(True, False)
 	keyboard.row('I am a blogger', 'I am an advertiser')
-	bot.send_message(message.chat.id, 'Hi! I am the bot, which connects advertisers with their perfect match bloggers. To begin our work, tell me who you are: a blogger or an advertiser?', reply_markup=keyboard)
+	bot.send_message(message.chat.id, 'Hi! I am the bot, which connects advertisers with their perfect match bloggers. To begin our work, tell me who are you: a blogger or an advertiser?', reply_markup=keyboard)
 	bot.send_sticker(chat_id, 'CAACAgIAAxkBAALZIF7D6Ujs9ALtrGIL53htddX9pN1IAAKSCAACCLcZAt2558s4lgJ9GQQ')
 
 @bot.message_handler(func=lambda message:message.text is not None and message.text[:4] == 'mode')
@@ -250,8 +251,7 @@ def upload_photo(message):
 		if users[chat_id].mode == 5:
 			users[chat_id].profile.proof_photo_id.append(photos.document_handler(message, bot))
 			users[chat_id].mode += 1
-			bot.send_message(chat_id, 'Thank you! Now I need to know the coverage of your stories\
-			\n(P.S Go to "statistics", choose "stories", then "coverage" for the last 14 days)')
+			bot.send_message(chat_id, 'Thank you! Now I need to know the coverage of your stories \n(P.S Go to "statistics", choose "stories", then "coverage" for the last 14 days)')
 		elif users[chat_id].mode == 7:
 			users[chat_id].profile.proof_photo_id.append(photos.document_handler(message, bot))
 			users[chat_id].mode += 1
@@ -272,8 +272,7 @@ def upload_photo(message):
 		elif users[chat_id].mode == 11:
 			users[chat_id].profile.proof_photo_id.append(photos.document_handler(message, bot))
 			users[chat_id].mode += 1
-			bot.send_message(chat_id, 'Cool! Now I need to divide your followers by gender as a percentage\
-			How many percent of your followers is female')
+			bot.send_message(chat_id, 'Cool! Now I need to divide your followers by gender as a percentage. How many percent of your followers is female')
 		elif users[chat_id].mode == 14:
 			users[chat_id].profile.proof_photo_id.append(photos.document_handler(message, bot))
 			users[chat_id].mode += 1
@@ -354,7 +353,7 @@ def create_profile(message):
 		users[chat_id].profile.followers = int(message.text)
 		users[chat_id].mode += 1
 		bot.send_message(chat_id, 'Wow, that is impressive! What is your post coverage?\
-		\n(P.S. Go to "statistics", choose "publications", then "coverage" for the last 30 days')		
+		\n(P.S. Go to "statistics", choose "publications", then "coverage" for the last 30 days)')		
 	elif users[chat_id].mode == 4:
 		if message.text.isdigit() == False:
 			bot.send_message(chat_id, 'Please, type only numbers without symbols or letters')
@@ -374,8 +373,8 @@ def create_profile(message):
 			users[chat_id].mode += 1
 			keyboard = types.ReplyKeyboardMarkup(True, False)
 			keyboard.row('Back to menu')
-			bot.send_message(chat_id, 'I am probably annoying with this, but I need one more screenshot of the page to prove\
-			Go to "statistics", choose "audience", then "region and cities"', reply_markup = keyboard)
+			bot.send_message(chat_id, 'I am probably annoying with this, but I need one more screenshot of the page to prove.\
+			Go to "statistics", choose "audience", then "location" by cities and region', reply_markup = keyboard)
 			return
 		users[chat_id].profile.followers_geo.append(message.text)
 		keyboard = types.ReplyKeyboardMarkup(True, False)
@@ -521,7 +520,7 @@ def create_order(message):
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('13-17', '18-24', '25-34')
 		keyboard.row('35-44', '45-54')
-		keyboard.row('Next')
+		keyboard.row('Next step')
 		if len(users[chat_id].order.age) <= 1: 
 			bot.send_message(chat_id, 'You may choose several options. When you finish, press "Next step" in order to go further', reply_markup = keyboard)
 	elif users[chat_id].mode == 8:
@@ -801,7 +800,7 @@ def get_message(message):
 			return
 		keyboard = types.ReplyKeyboardMarkup(True, True)
 		keyboard.row('Create a profile')
-		bot.send_message(chat_id, 'Heey! My future star, in this section you can create your profile or see your current one. Also, you can find the order yourself. But first, you need to create your profile.', reply_markup = keyboard)
+		bot.send_message(chat_id, 'Heey🙌 My future star, in this section you can create your profile or see your current one. Also, you can find the order yourself. But first, you need to create your profile.', reply_markup = keyboard)
 	elif message.text == 'Create a profile':
 		if db.check_blogger(chat_id) is True:
 			bot.send_message(chat_id, 'You have already created profile! If you want to create a new one or make some editions, go to /menu and "My profile"')
@@ -842,7 +841,7 @@ def get_message(message):
 		keyboard = types.ReplyKeyboardMarkup(True, False)
 		keyboard.row('Find my blogger', 'Create an order')
 		keyboard.row('My orders', 'Feedback')
-		bot.send_message(chat_id, 'Heey! Welcome to our program. You may find your blogger by creating a profile, you may create an order and find all your current orders',reply_markup=keyboard,parse_mode = 'Markdown')
+		bot.send_message(chat_id, 'Heey🙌 Welcome to our program.\n Here are the functions that our program may provide:\n▶ Press "Find my blogger" to get faster access to the database of bloggers \n ▶ Press "Create an order" to make your profile, so that bloggers will see detailed info about product and will contact you themselves (recommended) \n▶ Press "My orders" to see all orders that you posted in our program and have access to finding bloggers at any time\n▶ Press "Feedback" to leave us feeback on our program. We will apreciate it🤗',reply_markup=keyboard,parse_mode = 'Markdown')
 	elif message.text == 'Find my blogger':
 		users[chat_id].search_st = True
 		users[chat_id].search_list = db.search_bloggers()
@@ -908,7 +907,7 @@ def get_message(message):
 			keyboard.row('Back to menu')
 			bot.send_message(chat_id, 'Please, leave us your feedback on our work. We will be very grateful to you!', reply_markup=keyboard)
 		else:
-			bot.send_message(365391038, str(message.text) + '\nот ' + str(message.from_user.last_name) + ' ' + str(message.from_user.first_name) + ' @' + str(message.from_user.username) )
+			bot.send_message(259442131, str(message.text) + '\nfrom ' + str(message.from_user.last_name) + ' ' + str(message.from_user.first_name) + ' @' + str(message.from_user.username) )
 			default_vars(chat_id)
 			bot.send_message(chat_id, 'Thank you for your feedback!')
 			main_menu(chat_id)

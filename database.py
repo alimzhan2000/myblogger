@@ -7,7 +7,7 @@ class Database:
 	def __init__(self):
 		#local host------------------
 		self.con = psycopg2.connect(
-		  database = "bloggersca",
+		  database = "myblogger",
 		  user ="postgres", 
 		  password="qW!1234567", 
 		  host="localhost", 
